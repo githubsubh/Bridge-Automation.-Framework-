@@ -1,31 +1,29 @@
 from selenium.webdriver.common.by import By
 from pages.base_page import BasePage
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 class OTPPage(BasePage):
-    # Locators for individual digits
-    # Mobile OTP
-    def get_mob_otp_locator(self, digit_index):
-        # digit_index 1 to 6
-        return (By.CSS_SELECTOR, f"input.mob-otp-input[aria-label='Mobile OTP digit {digit_index}']")
-
-    # Email OTP
-    def get_email_otp_locator(self, digit_index):
-        # digit_index 1 to 6
-        return (By.CSS_SELECTOR, f"input.email-otp-input[aria-label='Email OTP digit {digit_index}']")
-
-    button_verify_xpath = (By.XPATH, "//button[@type='submit' or contains(text(), 'Verify') or contains(text(), 'CONTINUE')]")
-
-    def __init__(self, driver):
-        super().__init__(driver)
+    # General Locators for the groups of inputs
+    MOBILE_OTP_INPUTS = (By.CSS_SELECTOR, "input.mob-otp-input")
+    EMAIL_OTP_INPUTS = (By.CSS_SELECTOR, "input.email-otp-input")
 
     def enter_mobile_otp(self, otp):
         """Enter a 6-digit mobile OTP."""
         if len(otp) != 6:
             self.logger.error(f"Invalid Mobile OTP length: {len(otp)}. Expected 6.")
             return
-        for i in range(1, 7):
-            locator = self.get_mob_otp_locator(i)
-            self.do_send_keys(locator, otp[i-1])
+            
+        # Wait for presence of at least one input
+        WebDriverWait(self.driver, 10).until(EC.presence_of_element_located(self.MOBILE_OTP_INPUTS))
+        inputs = self.driver.find_elements(*self.MOBILE_OTP_INPUTS)
+        
+        if len(inputs) < 6:
+             self.logger.error(f"Found only {len(inputs)} Mobile OTP inputs, expected 6")
+             return
+
+        for i, char in enumerate(otp):
+            inputs[i].send_keys(char)
         self.logger.info("Entered 6-digit Mobile OTP")
 
     def enter_email_otp(self, otp):
@@ -33,9 +31,16 @@ class OTPPage(BasePage):
         if len(otp) != 6:
             self.logger.error(f"Invalid Email OTP length: {len(otp)}. Expected 6.")
             return
-        for i in range(1, 7):
-            locator = self.get_email_otp_locator(i)
-            self.do_send_keys(locator, otp[i-1])
+
+        WebDriverWait(self.driver, 10).until(EC.presence_of_element_located(self.EMAIL_OTP_INPUTS))
+        inputs = self.driver.find_elements(*self.EMAIL_OTP_INPUTS)
+        
+        if len(inputs) < 6:
+             self.logger.error(f"Found only {len(inputs)} Email OTP inputs, expected 6")
+             return
+
+        for i, char in enumerate(otp):
+            inputs[i].send_keys(char)
         self.logger.info("Entered 6-digit Email OTP")
 
     def click_verify(self):

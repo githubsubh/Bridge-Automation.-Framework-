@@ -9,6 +9,42 @@ class BasePage:
     def __init__(self, driver):
         self.driver = driver
 
+    def select_chosen_option(self, container_locator, option_text):
+        """Select an option from a Chosen.js dropdown."""
+        from selenium.webdriver.common.by import By
+        container_id = container_locator[1]
+        xpath = f"//div[@id='{container_id}']//ul[@class='chosen-results']/li[contains(text(), '{option_text}')]"
+        
+        try:
+            # Try 1: Standard Interaction
+            self.do_click(container_locator)
+            self.do_click((By.XPATH, xpath))
+            self.logger.info(f"Selected '{option_text}' from {container_id}")
+            return
+        except Exception as e:
+            self.logger.warning(f"Standard Chosen click failed for {container_locator}: {e}. Trying JS fallback.")
+        
+        try:
+            # Try 2: JS Click on Container + Standard Click on Option
+            container_elem = self.driver.find_element(*container_locator)
+            self.driver.execute_script("arguments[0].click();", container_elem)
+            self.do_click((By.XPATH, xpath))
+            self.logger.info(f"Selected '{option_text}' from {container_id} using JS Container Click")
+            return
+        except Exception as e:
+             self.logger.warning(f"JS Container click failed: {e}. Trying JS Click on Option directly.")
+
+        try:
+            # Try 3: JS Click on Option Directly (if pre-loaded/hidden)
+            option_elem = self.driver.find_element(By.XPATH, xpath)
+            self.driver.execute_script("arguments[0].click();", option_elem)
+            self.logger.info(f"Selected '{option_text}' from {container_id} using fully JS Click")
+        except Exception as e:
+            self.logger.error(f"All Chosen selection strategies failed for {container_locator}: {e}")
+            # Don't pass, let it bubble or handle if critical? 
+            # If this fails, form submission will likely fail.
+            pass
+
     def do_click(self, by_locator):
         try:
             WebDriverWait(self.driver, 10).until(EC.visibility_of_element_located(by_locator)).click()

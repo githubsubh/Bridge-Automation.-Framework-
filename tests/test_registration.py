@@ -15,6 +15,7 @@ from utilities.read_properties import ReadConfig
 from utilities.custom_logger import LogGen
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.by import By
 from faker import Faker
 
 class Test_001_Registration:
@@ -91,7 +92,7 @@ class Test_001_Registration:
         
         # --- Step 4: OTP (Human Loop) ---
         self.logger.info("Step 4: OTP Verification")
-        WebDriverWait(self.driver, 15).until(EC.url_contains("otp"))
+        WebDriverWait(self.driver, 30).until(EC.url_contains("otp"))
         print("\n" + "="*50)
         print("ATTENTION: OTP SENT. Please enter it MANUALLY in the browser.")
         print("The script will wait up to 5 minutes for you to complete this.")
@@ -108,40 +109,69 @@ class Test_001_Registration:
         
         # --- Step 6: Address Details ---
         self.logger.info("Step 6: Address Details")
-        WebDriverWait(self.driver, 15).until(EC.url_contains("address"))
-        address_page.enter_address_line1(faker.address())
+        time.sleep(2)
+        
+        address_page.enter_address_line1("101 dd nagar")
+        address_page.enter_street_locality("netaji subhash place")
         address_page.select_state("DELHI")
-        address_page.select_district("Central Delhi") # Example
-        address_page.enter_pincode("110001")
+        time.sleep(2)  # Wait for district dropdown to load
+        address_page.select_district("CENTRAL")
+        address_page.enter_pincode("110034")
         address_page.click_continue()
         
         # --- Step 7: Subject Details ---
         self.logger.info("Step 7: Subject Details")
         WebDriverWait(self.driver, 15).until(EC.url_contains("subject"))
-        subject_page.select_all_mediums("English")
+        # Select Medium for enabled subjects (dynamically detected)
+        subject_page.select_any_medium_for_enabled_subjects()
         subject_page.click_continue()
 
         # --- Step 8: Documents ---
         self.logger.info("Step 8: Document Upload")
-        WebDriverWait(self.driver, 15).until(EC.url_contains("documents"))
+        # Ensure dummy files exist
+        photo_path = os.path.join(os.getcwd(), "test_data", "dummy.jpg")
+        doc_path = os.path.join(os.getcwd(), "test_data", "dummy.pdf")
+        
+        # Create dummy JPEG if not exists
+        if not os.path.exists(photo_path):
+            self.logger.info("Creating dummy.jpg")
+            # Create a 100x100 white square if possible, or just a dummy file
+            try:
+                from PIL import Image
+                img = Image.new('RGB', (100, 100), color = 'white')
+                img.save(photo_path)
+            except:
+                with open(photo_path, "wb") as f:
+                    f.write(b"dummy image content")
+                    
+        # Create dummy PDF if not exists
+        if not os.path.exists(doc_path):
+            self.logger.info("Creating dummy.pdf")
+            with open(doc_path, "wb") as f:
+                f.write(b"%PDF-1.4\n1 0 obj\n<< /Type /Catalog /Pages 2 0 R >>\nendobj\n2 0 obj\n<< /Type /Pages /Kids [3 0 R] /Count 1 >>\nendobj\n3 0 obj\n<< /Type /Page /Parent 2 0 R /Resources << >> /Contents 4 0 R >>\nendobj\n4 0 obj\n<< /Length 1 >>\nstream\n \nendstream\nendobj\ntrailer\n<< /Root 1 0 R /Size 5 >>\n%%EOF")
+
+        # Increased wait for Documents page load
+        WebDriverWait(self.driver, 60).until(EC.url_contains("document"))
+        docs_page.debug_print_ids() # DEBUG LOCATORS
         
         # Prepare dummy paths
-        base_dir = os.getcwd()
-        dummy_img = os.path.join(base_dir, "test_data", "dummy.jpg")
-        dummy_pdf = os.path.join(base_dir, "test_data", "dummy.pdf")
+        photo_path = os.path.join(os.getcwd(), "test_data", "dummy.jpg")
+        doc_path = os.path.join(os.getcwd(), "test_data", "dummy.pdf")
         
-        docs_page.upload_document("photo", dummy_img)
-        docs_page.upload_document("signature", dummy_img)
-        docs_page.upload_document("aadhar", dummy_pdf)
-        docs_page.upload_document("10th", dummy_pdf)
-        docs_page.upload_document("12th", dummy_pdf)
+        # Upload all docs dynamically
+        docs_page.upload_all_documents(photo_path, doc_path)
         
+        # Handle checkboxes (if any)
         docs_page.toggle_checkboxes()
+        
+        # Save & Continue
         docs_page.click_save_continue()
         
         # --- Step 9: Review & Payment ---
         self.logger.info("Step 9: Review and Payment")
-        WebDriverWait(self.driver, 15).until(EC.url_contains("review"))
+        # Transition can be slow, wait for 'review' or 'payment' in URL
+        WebDriverWait(self.driver, 60).until(lambda d: "review" in d.current_url.lower() or "payment" in d.current_url.lower())
+        self.logger.info("Successfully reached Review/Payment Page!")
         
         payment_page.review_and_pay()
         

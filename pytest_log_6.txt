@@ -1,0 +1,20 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.9.6, pytest-8.4.2, pluggy-1.6.0 -- /Library/Developer/CommandLineTools/usr/bin/python3
+cachedir: .pytest_cache
+metadata: {'Python': '3.9.6', 'Platform': 'macOS-12.7.6-x86_64-i386-64bit', 'Packages': {'pytest': '8.4.2', 'pluggy': '1.6.0'}, 'Plugins': {'metadata': '3.1.1', 'html': '4.2.0', 'Faker': '37.12.0'}}
+rootdir: /Users/anujjha/Bridge-Automation.-Framework-
+plugins: metadata-3.1.1, html-4.2.0, Faker-37.12.0
+collecting ... collected 1 item
+
+tests/test_registration.py::Test_001_Registration::test_registration 
+
+=============================== warnings summary ===============================
+../Library/Python/3.9/lib/python/site-packages/urllib3/__init__.py:35
+  /Users/anujjha/Library/Python/3.9/lib/python/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+    warnings.warn(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! KeyboardInterrupt !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+/Users/anujjha/Library/Python/3.9/lib/python/site-packages/selenium/webdriver/support/wait.py:137: KeyboardInterrupt
+(to show a full traceback on KeyboardInterrupt use --full-trace)
+======================== 1 warning in 322.48s (0:05:22) ========================

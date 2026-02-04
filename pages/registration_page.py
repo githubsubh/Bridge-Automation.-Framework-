@@ -68,21 +68,34 @@ class RegistrationPage(BasePage):
             self.logger.info("No modal found to dismiss.")
 
     def click_continue(self):
-        # Click the "Continue" or "Next" button
-        # Use ID found in logs
+        """Click the 'Continue' button on Basic Details page."""
         try:
-            self.do_click((By.ID, "submit-basic-details"))
+            # First ensure no modal is blocking
+            self.handle_modal()
+            
+            # Wait for button to be enabled (not lightblue/disabled)
+            selector = (By.ID, "submit-basic-details")
+            self.logger.info("Waiting for Continue button to be enabled...")
+            
+            # Explicitly wait until disabled attribute is gone or button is clickable
+            import time
+            for _ in range(10):
+                btn = self.driver.find_element(*selector)
+                if btn.is_enabled() and "disabled" not in btn.get_attribute("outerHTML"):
+                    break
+                time.sleep(1)
+            
+            self.do_click(selector)
             self.logger.info("Clicked Continue button by ID")
         except Exception as e:
-            # Fallback
-            self.logger.warning(f"Failed to click by ID ({type(e).__name__}), trying JS: {e}")
+            self.logger.warning(f"Standard click failed, trying JS: {e}")
             try:
                 element = self.driver.find_element(By.ID, "submit-basic-details")
                 self.driver.execute_script("arguments[0].click();", element)
                 self.logger.info("Clicked Continue button by ID using JS")
             except Exception as e2:
-                self.logger.warning(f"JS click by ID failed, trying generic: {e2}")
-                self.do_click((By.CSS_SELECTOR, "button[type='submit']"))
+                self.logger.error(f"JS click failed: {e2}")
+                raise
             
     def click_verify_udise(self):
         self.do_click(self.button_verify_id)

@@ -2,9 +2,12 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException, NoSuchElementException
 from utilities.custom_logger import LogGen
+from utilities.read_properties import ReadConfig
 
 class BasePage:
     logger = LogGen.loggen()
+    TIMEOUT = ReadConfig.getExplicitWait()
+    POLL_FREQUENCY = 0.5
 
     def __init__(self, driver):
         self.driver = driver
@@ -179,7 +182,7 @@ class BasePage:
 
     def do_click(self, by_locator):
         try:
-            WebDriverWait(self.driver, 10).until(EC.visibility_of_element_located(by_locator)).click()
+            WebDriverWait(self.driver, self.TIMEOUT).until(EC.visibility_of_element_located(by_locator)).click()
             self.logger.info(f"Clicked on element with locator: {by_locator}")
         except Exception as e:
             self.logger.error(f"Exception occurred while clicking on element: {by_locator}. Exception: {e}")
@@ -188,7 +191,7 @@ class BasePage:
     def do_send_keys(self, by_locator, text):
         try:
             # use clickable instead of just visible
-            element = WebDriverWait(self.driver, 20).until(EC.element_to_be_clickable(by_locator))
+            element = WebDriverWait(self.driver, self.TIMEOUT).until(EC.element_to_be_clickable(by_locator))
             # clear field first
             try:
                 element.clear()
@@ -207,7 +210,7 @@ class BasePage:
 
     def get_element_text(self, by_locator):
         try:
-            element = WebDriverWait(self.driver, 10).until(EC.visibility_of_element_located(by_locator))
+            element = WebDriverWait(self.driver, self.TIMEOUT).until(EC.visibility_of_element_located(by_locator))
             self.logger.info(f"Got text '{element.text}' from element with locator: {by_locator}")
             return element.text
         except Exception as e:
@@ -216,7 +219,7 @@ class BasePage:
 
     def is_visible(self, by_locator):
         try:
-            element = WebDriverWait(self.driver, 10).until(EC.visibility_of_element_located(by_locator))
+            element = WebDriverWait(self.driver, self.TIMEOUT).until(EC.visibility_of_element_located(by_locator))
             return bool(element)
         except TimeoutException:
             return False
@@ -226,7 +229,7 @@ class BasePage:
 
     def wait_for_invisibility(self, by_locator):
         try:
-            WebDriverWait(self.driver, 10).until(EC.invisibility_of_element_located(by_locator))
+            WebDriverWait(self.driver, self.TIMEOUT).until(EC.invisibility_of_element_located(by_locator))
             self.logger.info(f"Element with locator {by_locator} is now invisible")
         except Exception as e:
             self.logger.error(f"Exception while waiting for invisibility of {by_locator}: {e}")

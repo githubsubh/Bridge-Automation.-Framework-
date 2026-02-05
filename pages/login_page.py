@@ -32,15 +32,27 @@ class LoginPage(BasePage):
     def login_with_manual_captcha(self, email, password, timeout=60):
         """
         Enters credentials and then waits for the user to manually enter CAPTCHA and submit.
-        The function polls for a successful login indicator (e.g. Logout button or URL change).
         """
         self.logger.info("Starting Login Process...")
-        self.set_email(email)
-        self.set_password(password)
+        
+        # Stabilization after navigation
+        time.sleep(2)
+        
+        # Email
+        self.logger.info(f"Entering email: {email}")
+        self.do_send_keys(self.textbox_email_id, email)
+        
+        # Password
+        self.logger.info("Entering password...")
+        self.do_send_keys(self.textbox_password_id, password)
+        
+        # Visual pause for user check
+        time.sleep(1)
         
         # Focus on CAPTCHA field to help user
         try:
-            self.driver.find_element(*self.textbox_captcha_id).click()
+            self.do_click(self.textbox_captcha_id)
+            self.logger.info("Focused CAPTCHA field")
         except:
             pass
 

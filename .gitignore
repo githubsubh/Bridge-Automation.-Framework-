@@ -9,3 +9,8 @@ reports/
 venv/
 env/
 .env
+automation_profile/
+automation_profiles/
+test_profile/
+*.html
+*.png

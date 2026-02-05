@@ -45,7 +45,7 @@ class DocumentsPage(BasePage):
                     
                 self.logger.info(f"Uploading to input (ID='{eid}'): {target_file}")
                 inp.send_keys(target_file)
-                time.sleep(1)
+                time.sleep(0.3)
                 
             except Exception as e:
                 self.logger.error(f"Failed to upload to an input: {e}")

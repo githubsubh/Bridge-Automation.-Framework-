@@ -91,12 +91,10 @@ class Test_001_Registration:
         
         # --- Step 6: Address Details ---
         self.logger.info("Step 6: Address Details")
-        time.sleep(self.timeouts['stabilization']) # Stabilization
         
         address_page.enter_address_line1("101 dd nagar")
         address_page.enter_street_locality("netaji subhash place")
         address_page.select_state("DELHI")
-        time.sleep(self.timeouts['stabilization']) 
         address_page.select_district("CENTRAL")
         address_page.enter_pincode("110034")
         address_page.click_continue()
@@ -120,7 +118,7 @@ class Test_001_Registration:
         
         # --- Step 9: Review & Payment ---
         self.logger.info("Step 9: Review and Payment")
-        time.sleep(5) # Keep some buffer for docs upload API response
+        time.sleep(1) # Reduced buffer for docs upload API response
         WebDriverWait(self.driver, self.timeouts['page_load']).until(lambda d: "review" in d.current_url.lower() or "payment" in d.current_url.lower())
         self.logger.info("Successfully reached Review/Payment Page!")
         

@@ -198,7 +198,7 @@ class PaymentFlowPage(BasePage):
                 
                 if not found_fields:
                     self.logger.info("Card fields not found yet, waiting...")
-                    time.sleep(2)
+                    time.sleep(0.5)
             
             if not found_fields:
                 self.logger.error("Failed to find card details fields after retries.")

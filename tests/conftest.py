@@ -16,14 +16,39 @@ def setup(browser, headless):
         options = ChromeOptions()
         if headless:
             options.add_argument("--headless")
-        logger.info("Initializing Chrome Driver Manager...")
-        print("DEBUG: Calling ChromeDriverManager().install()...")
+        
+        import os
+        import time
+        pwd = os.getcwd()
+        profile_path = os.path.join(pwd, "automation_profiles", f"profile_{int(time.time())}")
+        if not os.path.exists(profile_path):
+            os.makedirs(profile_path, exist_ok=True)
+            
+        options.add_argument(f"--user-data-dir={profile_path}")
+        options.add_argument("--profile-directory=Default")
+        
+        # Essential flags to avoid first-run popups and background tasks
+        options.add_experimental_option("excludeSwitches", ["enable-automation"])
+        options.add_experimental_option('useAutomationExtension', False)
+        options.add_argument("--disable-blink-features=AutomationControlled")
+        options.add_argument("--no-sandbox")
+        options.add_argument("--disable-dev-shm-usage")
+        options.add_argument("--no-first-run")
+        options.add_argument("--no-default-browser-check")
+        options.add_argument("--password-store=basic")
+        options.add_argument("--start-maximized")
+
+        logger.info(f"Initializing isolated Chrome session with profile: {profile_path}")
         service = Service(ChromeDriverManager().install())
-        print(f"DEBUG: Service created. Executable path: {service.path}")
-        print("DEBUG: Initializing webdriver.Chrome()...")
         driver = webdriver.Chrome(service=service, options=options)
-        print("DEBUG: webdriver.Chrome() initialized.")
-        logger.info("Launching Chrome browser")
+        driver.maximize_window()
+        # Ensure it comes to front
+        try:
+            driver.set_window_position(0, 0)
+            driver.execute_script("window.focus();")
+        except:
+            pass
+        logger.info("Launching isolated Chrome browser")
     elif browser == 'firefox':
         options = FirefoxOptions()
         if headless:

@@ -1,5 +1,6 @@
 import pytest
 import time
+from pages.home_page import HomePage
 from pages.login_page import LoginPage
 from utilities.read_properties import ReadConfig
 from utilities.custom_logger import LogGen
@@ -8,7 +9,7 @@ from selenium.webdriver.support import expected_conditions as EC
 
 class Test_002_Login:
     # Read config
-    login_url = ReadConfig.getLoginURL()
+    home_url = "https://bridge-uat.nios.ac.in/"
     email = ReadConfig.getLoginEmail()
     password = ReadConfig.getLoginPassword()
     logger = LogGen.loggen()
@@ -16,8 +17,13 @@ class Test_002_Login:
     def test_login_flow(self, setup):
         self.logger.info("**** Starting Test_002_Login ****")
         self.driver = setup
-        self.driver.get(self.login_url)
+        self.driver.get(self.home_url)
         
+        # 1. Navigation Phase
+        home_page = HomePage(self.driver)
+        home_page.navigate_to_teacher_login()
+        
+        # 2. Login Phase
         login_page = LoginPage(self.driver)
         
         # Perform Login with Manual CAPTCHA Entry

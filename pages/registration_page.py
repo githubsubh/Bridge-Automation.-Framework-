@@ -55,46 +55,49 @@ class RegistrationPage(BasePage):
         # Check for success message or green badge
         pass 
 
-    def handle_modal(self):
+    def handle_modal(self, timeout=1):
         try:
-            # Wait for sweet alert specific confirm button
-            self.logger.info("Checking for any modal popups...")
-            self.do_click((By.CSS_SELECTOR, "button.swal2-confirm"))
-            self.logger.info("Clicked OK/Confirm on modal")
+            # Very short check for modal
+            self.logger.info(f"Quick check for modal (timeout={timeout}s)...")
+            from selenium.webdriver.support.wait import WebDriverWait
+            from selenium.webdriver.support import expected_conditions as EC
             
-            # Wait for the modal container to disappear
-            self.wait_for_invisibility((By.CSS_SELECTOR, "div.swal2-container"))
+            confirm_btn = WebDriverWait(self.driver, timeout).until(
+                EC.element_to_be_clickable((By.CSS_SELECTOR, "button.swal2-confirm"))
+            )
+            confirm_btn.click()
+            self.logger.info("Dismissed modal")
+            time.sleep(0.5)
         except Exception:
-            self.logger.info("No modal found to dismiss.")
+            pass
 
     def click_continue(self):
         """Click the 'Continue' button on Basic Details page."""
         try:
-            # First ensure no modal is blocking
-            self.handle_modal()
+            # Quick modal check before clicking
+            self.handle_modal(timeout=1)
             
-            # Wait for button to be enabled (not lightblue/disabled)
             selector = (By.ID, "submit-basic-details")
-            self.logger.info("Waiting for Continue button to be enabled...")
             
-            # Explicitly wait until disabled attribute is gone or button is clickable
+            # Wait only briefly for button to be enabled (max 2s)
             import time
-            for _ in range(10):
+            for _ in range(2):
                 btn = self.driver.find_element(*selector)
                 if btn.is_enabled() and "disabled" not in btn.get_attribute("outerHTML"):
                     break
                 time.sleep(1)
             
+            self.logger.info("Screen waiting: 5 seconds pause as per user preference...")
+            time.sleep(5)
+            
             self.do_click(selector)
-            self.logger.info("Clicked Continue button by ID")
+            self.logger.info("Clicked Continue button")
         except Exception as e:
-            self.logger.warning(f"Standard click failed, trying JS: {e}")
+            self.logger.warning(f"Click failed: {e}")
             try:
                 element = self.driver.find_element(By.ID, "submit-basic-details")
                 self.driver.execute_script("arguments[0].click();", element)
-                self.logger.info("Clicked Continue button by ID using JS")
-            except Exception as e2:
-                self.logger.error(f"JS click failed: {e2}")
+            except Exception:
                 raise
             
     def click_verify_udise(self):

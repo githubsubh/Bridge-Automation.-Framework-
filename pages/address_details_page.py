@@ -15,11 +15,9 @@ class AddressDetailsPage(BasePage):
     CONTINUE_BTN = (By.XPATH, "//button[@type='submit' or contains(text(), 'Save') or contains(text(), 'Next') or contains(text(), 'Continue')]")
 
     def enter_address_line1(self, address):
-        time.sleep(1)
         self.do_send_keys(self.ADDRESS_LINE_1, address)
 
     def enter_street_locality(self, street):
-        time.sleep(1)
         self.do_send_keys(self.STREET_LOCALITY, street)
 
     def select_state(self, state):
@@ -28,12 +26,11 @@ class AddressDetailsPage(BasePage):
         
     def select_district(self, district):
         """Select district from Chosen.js dropdown (must select state first)."""
-        time.sleep(2)  # Wait for district dropdown to load after state selection
+        time.sleep(0.5)  # Quick wait for district dropdown to load after state selection
         self.select_chosen_option(self.DISTRICT_CHOSEN, district)
 
     def enter_pincode(self, pincode):
         self.do_send_keys(self.PINCODE_INPUT, pincode)
         
     def click_continue(self):
-        time.sleep(1)
         self.do_click(self.CONTINUE_BTN)

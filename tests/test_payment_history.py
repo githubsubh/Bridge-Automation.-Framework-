@@ -1,5 +1,6 @@
 import pytest
 import time
+from pages.home_page import HomePage
 from pages.login_page import LoginPage
 from pages.dashboard_page import DashboardPage
 from pages.payment_history_page import PaymentHistoryPage
@@ -8,7 +9,7 @@ from utilities.custom_logger import LogGen
 
 class Test_004_PaymentHistory:
     # Read config
-    login_url = ReadConfig.getLoginURL()
+    home_url = "https://bridge-uat.nios.ac.in/"
     email = ReadConfig.getLoginEmail()
     password = ReadConfig.getLoginPassword()
     logger = LogGen.loggen()
@@ -16,15 +17,19 @@ class Test_004_PaymentHistory:
     def test_download_payment_receipts(self, setup):
         self.logger.info("**** Starting Test_004_PaymentHistory ****")
         self.driver = setup
-        self.driver.get(self.login_url)
+        self.driver.get(self.home_url)
         
-        # 1. Login Phase
+        # 1. Navigation Phase
+        home_page = HomePage(self.driver)
+        home_page.navigate_to_teacher_login()
+        
+        # 2. Login Phase
         login_page = LoginPage(self.driver)
         self.logger.info("Logging in to access Dashboard...")
         if not login_page.login_with_manual_captcha(self.email, self.password, timeout=120):
             pytest.fail("Login failed, cannot test payment history.")
             
-        # 2. Navigate to Payment History
+        # 3. Navigate to Payment History
         dashboard_page = DashboardPage(self.driver)
         self.logger.info("Navigating to Payment Status -> View Payment History")
         

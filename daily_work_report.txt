@@ -6,3 +6,12 @@ Today, we achieved a major milestone by fully automating the NIOS Bridge Course 
     - Integrated SabPaisa payment gateway simulation.
 - **Status**: The `tests/test_registration.py` suite passes successfully.
 - **Next Steps**: We are now moving on to the Login Module, specifically targeting case-sensitive CAPTCHA automation.
+
+**Update - Login & Dashboard Automation**:
+- **Login Module**: Successfully implemented `test_login.py` with "Human-in-the-Loop" for case-sensitive CAPTCHA.
+- **Dashboard Features**:
+    - Created `dashboard_page.py` and `test_dashboard.py` to verify all key dashboard sections (Study Material, E-Services, Payment Status, Workflow).
+    - DOM analysis used to pinpoint exact locators.
+- **Payment History**:
+    - Implemented `test_payment_history.py` to automatically navigate to Payment History and download all receipts.
+- **Documentation**: Created `LOGIN_GUIDE.md` with screenshots to assist users with the new login process.

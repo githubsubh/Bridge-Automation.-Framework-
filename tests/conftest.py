@@ -16,7 +16,13 @@ def setup(browser, headless):
         options = ChromeOptions()
         if headless:
             options.add_argument("--headless")
-        driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+        logger.info("Initializing Chrome Driver Manager...")
+        print("DEBUG: Calling ChromeDriverManager().install()...")
+        service = Service(ChromeDriverManager().install())
+        print(f"DEBUG: Service created. Executable path: {service.path}")
+        print("DEBUG: Initializing webdriver.Chrome()...")
+        driver = webdriver.Chrome(service=service, options=options)
+        print("DEBUG: webdriver.Chrome() initialized.")
         logger.info("Launching Chrome browser")
     elif browser == 'firefox':
         options = FirefoxOptions()

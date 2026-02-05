@@ -28,6 +28,18 @@ class ReadConfig:
             return 20
 
     @staticmethod
+    def getLoginURL():
+        return config.get('login', 'url')
+
+    @staticmethod
+    def getLoginEmail():
+        return config.get('login', 'email')
+
+    @staticmethod
+    def getLoginPassword():
+        return config.get('login', 'password')
+
+    @staticmethod
     def getPaymentConfig():
         return {
             "gateway": config.get('payment', 'gateway_name'),

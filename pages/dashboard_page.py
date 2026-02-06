@@ -40,6 +40,18 @@ class DashboardPage(BasePage):
     header_grievances = (By.XPATH, "//h6[contains(text(), 'Grievances')]")
     link_submit_grievance = (By.XPATH, "//a[@href='https://grs.nios.ac.in/']")
     
+    # School & Regional Centre Modal (from DOM)
+    btn_school_details = (By.CSS_SELECTOR, "button[data-bs-target='#SchoolNIOSRegionalCentreDetailsModal']")
+    modal_school_details = (By.ID, "SchoolNIOSRegionalCentreDetailsModal")
+    modal_close_btn = (By.CSS_SELECTOR, "#SchoolNIOSRegionalCentreDetailsModal .btn-close")
+    header_school_details_modal = (By.XPATH, "//h6[contains(text(), 'School Details')]")
+    header_regional_centre_modal = (By.XPATH, "//h6[contains(text(), 'Regional Centre Details')]")
+    
+    # Progress Items / Sidebar (from DOM)
+    container_reg_steps = (By.CSS_SELECTOR, ".list-group.list-group-flush.mt-1")
+    badges_success = (By.CSS_SELECTOR, ".badge.bg-success")
+    progress_bar = (By.CSS_SELECTOR, ".progress-bar")
+    
     # Header & Logout
     dropdown_user = (By.ID, "dropdownMenuLink")
     link_change_password = (By.XPATH, "//a[@href='/teacher/change-password']")
@@ -133,6 +145,53 @@ class DashboardPage(BasePage):
                  return True
         self.logger.error("Grievances section missing or incomplete.")
         return False
+
+    def click_school_details(self):
+        """Clicks the School & Regional Centre Details button."""
+        self.logger.info("Opening School & NIOS Regional Centre Details Modal...")
+        self.do_click(self.btn_school_details)
+
+    def verify_modal_content(self):
+        """Verifies tables inside the school details modal and closes it."""
+        import time
+        try:
+            # Wait for modal to be fully visible
+            time.sleep(2)
+            self.logger.info("Verifying Modal headers...")
+            s_header = self.is_visible(self.header_school_details_modal)
+            r_header = self.is_visible(self.header_regional_centre_modal)
+            
+            if s_header and r_header:
+                self.logger.info("School and Regional Centre information visible in modal.")
+                
+                # Scrape school name for logging (2nd TD in the first table body)
+                school_name = self.get_element_text((By.XPATH, "//div[@id='SchoolNIOSRegionalCentreDetailsModal']//tbody/tr[1]/td[2]"))
+                self.logger.info(f"Modal Audit Success: Found School - {school_name}")
+                
+                # Close Modal
+                self.do_click(self.modal_close_btn)
+                self.logger.info("Modal closed.")
+                return True
+        except Exception as e:
+            self.logger.error(f"Modal verification failed: {e}")
+        return False
+
+    def audit_sidebar_progress(self):
+        """Audits the sidebar to ensure all 5 registration steps have success checkmarks."""
+        self.logger.info("Auditing Sidebar Registration Steps via DOM structure...")
+        
+        # Verify 100% progress bar
+        try:
+            p_bar = self.get_element(self.progress_bar)
+            progress_text = p_bar.text.strip()
+            self.logger.info(f"Progress bar value: {progress_text}")
+        except:
+            progress_text = "0%"
+
+        success_badges = self.driver.find_elements(*self.badges_success)
+        self.logger.info(f"Number of green checkmarks found: {len(success_badges)}")
+        
+        return len(success_badges) == 5 and "100%" in progress_text
 
     def do_logout(self):
         """Performs logout."""

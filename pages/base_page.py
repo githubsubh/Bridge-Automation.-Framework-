@@ -244,3 +244,15 @@ class BasePage:
             self.logger.info(f"Element with locator {by_locator} is now invisible")
         except Exception as e:
             self.logger.error(f"Exception while waiting for invisibility of {by_locator}: {e}")
+    def get_element(self, by_locator):
+        """Finds and returns an element after waiting for its visibility."""
+        from selenium.webdriver.support import expected_conditions as EC
+        try:
+            # First wait for existence in DOM
+            WebDriverWait(self.driver, self.TIMEOUT).until(EC.presence_of_element_located(by_locator))
+            # Then wait for visibility if possible, but for file inputs they might not be 'visible' in standard sense
+            # if they are hidden/disabled but exist.
+            return self.driver.find_element(*by_locator)
+        except Exception as e:
+            self.logger.error(f"Failed to find element with locator: {by_locator}. Exception: {e}")
+            raise

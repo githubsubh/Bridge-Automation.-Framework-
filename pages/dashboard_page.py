@@ -24,8 +24,25 @@ class DashboardPage(BasePage):
     # Recent Activities
     header_recent_activities = (By.XPATH, "//h5[contains(text(), 'Recent Activities')]")
     
+    # My Documents
+    header_my_documents = (By.XPATH, "//h6[contains(text(), 'My Documents')]")
+    link_view_documents = (By.XPATH, "//a[@href='/teacher/documents']")
+    
+    # Print
+    header_print = (By.XPATH, "//h6[contains(text(), 'Print')]")
+    link_print_application = (By.XPATH, "//a[@href='/teacher/print-application-form']")
+    
+    # Results
+    header_results = (By.XPATH, "//h6[contains(text(), 'Results')]")
+    link_public_exam_results = (By.XPATH, "//a[contains(text(), 'Public Exam Results')]")
+    
+    # Grievances
+    header_grievances = (By.XPATH, "//h6[contains(text(), 'Grievances')]")
+    link_submit_grievance = (By.XPATH, "//a[@href='https://grs.nios.ac.in/']")
+    
     # Header & Logout
     dropdown_user = (By.ID, "dropdownMenuLink")
+    link_change_password = (By.XPATH, "//a[@href='/teacher/change-password']")
     link_logout = (By.XPATH, "//a[@href='/auth/logout']")
 
     def __init__(self, driver):
@@ -75,6 +92,46 @@ class DashboardPage(BasePage):
              return True
         
         self.logger.error(f"Workflow sections missing. Steps: {steps_found}, Activities: {activities_found}")
+        return False
+
+    def verify_my_documents(self):
+        """Verifies the My Documents section exists and has View Documents link."""
+        self.logger.info("Verifying My Documents Section...")
+        if self.is_visible(self.header_my_documents):
+             if self.is_visible(self.link_view_documents):
+                 self.logger.info("My Documents section verified.")
+                 return True
+        self.logger.error("My Documents section missing or incomplete.")
+        return False
+
+    def verify_print_section(self):
+        """Verifies the Print section exists and has Application Form link."""
+        self.logger.info("Verifying Print Section...")
+        if self.is_visible(self.header_print):
+             if self.is_visible(self.link_print_application):
+                 self.logger.info("Print section verified.")
+                 return True
+        self.logger.error("Print section missing or incomplete.")
+        return False
+
+    def verify_results_section(self):
+        """Verifies the Results section exists."""
+        self.logger.info("Verifying Results Section...")
+        if self.is_visible(self.header_results):
+             if self.is_visible(self.link_public_exam_results):
+                 self.logger.info("Results section verified.")
+                 return True
+        self.logger.error("Results section missing or incomplete.")
+        return False
+
+    def verify_grievances_section(self):
+        """Verifies the Grievances section exists."""
+        self.logger.info("Verifying Grievances Section...")
+        if self.is_visible(self.header_grievances):
+             if self.is_visible(self.link_submit_grievance):
+                 self.logger.info("Grievances section verified.")
+                 return True
+        self.logger.error("Grievances section missing or incomplete.")
         return False
 
     def do_logout(self):

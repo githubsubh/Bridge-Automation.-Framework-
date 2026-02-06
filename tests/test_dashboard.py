@@ -36,10 +36,22 @@ class Test_003_DashboardFeatures:
         self.logger.info("--- 3. Payment Status Check ---")
         assert dashboard_page.verify_payment_status(), "Payment Status Section Verification Failed"
         
-        self.logger.info("--- 4. Workflow Check ---")
+        self.logger.info("--- 4. My Documents Check ---")
+        assert dashboard_page.verify_my_documents(), "My Documents Section Verification Failed"
+        
+        self.logger.info("--- 5. Print Section Check ---")
+        assert dashboard_page.verify_print_section(), "Print Section Verification Failed"
+        
+        self.logger.info("--- 6. Results Section Check ---")
+        assert dashboard_page.verify_results_section(), "Results Section Verification Failed"
+        
+        self.logger.info("--- 7. Grievances Section Check ---")
+        assert dashboard_page.verify_grievances_section(), "Grievances Section Verification Failed"
+        
+        self.logger.info("--- 8. Workflow Check ---")
         assert dashboard_page.verify_workflow(), "Workflow/Registration Steps Verification Failed"
         
-        self.logger.info("--- 5. Logout Check ---")
+        self.logger.info("--- 9. Logout Check ---")
         dashboard_page.do_logout()
         
         self.logger.info("**** Test_003_DashboardFeatures Passed Successfully ****")

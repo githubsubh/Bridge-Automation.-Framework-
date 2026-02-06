@@ -208,6 +208,17 @@ class BasePage:
             self.logger.error(f"Exception occurred while sending keys to element: {by_locator}. Type: {type(e).__name__}. Exception: {e}")
             raise
 
+    def mouse_hover(self, by_locator):
+        """Simulates mouse hover over an element."""
+        from selenium.webdriver import ActionChains
+        try:
+            element = WebDriverWait(self.driver, self.TIMEOUT).until(EC.visibility_of_element_located(by_locator))
+            actions = ActionChains(self.driver)
+            actions.move_to_element(element).perform()
+            self.logger.info(f"Mouse hovered over element with locator: {by_locator}")
+        except Exception as e:
+            self.logger.error(f"Exception occurred while hovering: {by_locator}. Exception: {e}")
+
     def get_element_text(self, by_locator):
         try:
             element = WebDriverWait(self.driver, self.TIMEOUT).until(EC.visibility_of_element_located(by_locator))

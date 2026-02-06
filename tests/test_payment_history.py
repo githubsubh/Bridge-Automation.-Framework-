@@ -30,6 +30,9 @@ class Test_004_PaymentHistory:
             pytest.fail("Login failed, cannot test payment history.")
             
         # 3. Navigate to Payment History
+        self.logger.info("Login successful. Waiting 5 seconds on Dashboard...")
+        time.sleep(5)
+        
         dashboard_page = DashboardPage(self.driver)
         self.logger.info("Navigating to Payment Status -> View Payment History")
         
@@ -46,10 +49,12 @@ class Test_004_PaymentHistory:
             pytest.fail("Payment History link not visible on Dashboard.")
             
         # 3. Download Receipts
+        self.logger.info("On Transactions page. Waiting 5 seconds to show transactions...")
+        time.sleep(5)
+        
         history_page = PaymentHistoryPage(self.driver)
         
         # Verify we are on transactions page
-        time.sleep(2)
         if "transactions" not in self.driver.current_url:
             self.logger.warning("URL did not change to /transactions immediately.")
         

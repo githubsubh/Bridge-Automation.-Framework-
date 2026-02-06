@@ -67,7 +67,7 @@ class Test_005_StudyMaterial:
         count = material_page.download_all_materials()
         
         # Keep open for analysis
-        time.sleep(300)
+        time.sleep(5)
         
         if count > 0:
             self.logger.info(f"Test Passed: Downloaded {count} materials.")

@@ -64,6 +64,33 @@ def setup(browser, headless):
         
     driver.implicitly_wait(ReadConfig.getImplicitWait())
     driver.maximize_window()
+    
+    # -----------------------------------------------------------
+    # FORCE WINDOW VISIBILITY (User Request)
+    # This ensures the browser appears on the CURRENT workspace
+    # -----------------------------------------------------------
+    if not headless:
+        try:
+            logger.info("Forcing window to front with Alert Popup...")
+            # Bring to front using window position and focus
+            driver.set_window_position(0, 0)
+            driver.execute_script("window.focus();")
+            
+            # Use Alert to force OS focus switch
+            driver.execute_script("alert('⚠️ AUTOMATION STARTED! Chrome is visible on this workspace.');")
+            import time
+            time.sleep(2) # Wait for alert to be seen
+            try:
+                alert = driver.switch_to.alert
+                alert.accept()
+            except:
+                pass # Alert might have been closed or not appeared
+                
+            driver.execute_script("window.focus();")
+        except Exception as e:
+            logger.warning(f"Could not force window focus: {e}")
+    # -----------------------------------------------------------
+    
     yield driver
     driver.quit()
 

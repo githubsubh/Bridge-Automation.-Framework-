@@ -76,17 +76,17 @@ class Test_001_Registration:
         
         # --- Step 4: OTP (Human Loop) ---
         self.logger.info("Step 4: OTP Verification")
-        WebDriverWait(self.driver, self.timeouts['page_load']).until(EC.url_contains("otp"))
+        WebDriverWait(self.driver, 60).until(EC.url_contains("otp"))
         print("\n" + "="*50)
         print("ATTENTION: OTP SENT. Please enter it MANUALLY in the browser.")
-        print(f"The script will wait up to {self.timeouts['otp_wait']} seconds for you to complete this.")
+        print(f"The script will wait up to 300 seconds for you to complete this.")
         print("="*50)
         
         # --- Step 5: Personal Information ---
         self.logger.info("Step 5: Personal Information")
-        WebDriverWait(self.driver, self.timeouts['otp_wait']).until(EC.url_contains("personal"))
+        WebDriverWait(self.driver, 300).until(EC.url_contains("personal"))
         personal_page.set_social_category("General")
-        personal_page.set_medium_of_study("English")
+        personal_page.set_medium_of_study("Hindi")
         personal_page.click_continue()
         
         # --- Step 6: Address Details ---

@@ -51,3 +51,20 @@ class PaymentHistoryPage(BasePage):
 
         self.logger.info(f"Successfully initiated {success_count} downloads.")
         return success_count
+
+    def get_transaction_details(self):
+        """Extracts text from all transaction rows to verify statuses."""
+        self.logger.info("Extracting transaction details...")
+        rows = self.driver.find_elements(*self.table_rows_xpath)
+        transactions = []
+        
+        if not rows:
+            self.logger.info("No transaction rows found in the table.")
+            return transactions
+
+        for i, row in enumerate(rows):
+            text = row.text
+            self.logger.info(f"Transaction Row {i+1}: {text}")
+            transactions.append(text)
+            
+        return transactions

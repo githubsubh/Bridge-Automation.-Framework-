@@ -1,0 +1,15 @@
+Test Case ID,Test Name,Status,Duration (sec),Date,Time,Browser,Comments
+TC001,Full Registration Flow,PASSED,192.13,2026-02-11,11:58:07,Chrome,OTP manual entry required
+TC002,Login Flow,PASSED,64.00,2026-02-11,11:59:56,Chrome,CAPTCHA manual entry required
+TC003,Logout Flow,PASSED,72.15,2026-02-11,12:32:08,Chrome,Smooth logout with verification
+TC004,Dashboard Features,PASSED,32.78,2026-02-11,12:39:35,Chrome,All 9 sections verified
+TC005,Dashboard Navigation,PASSED,114.25,2026-02-11,12:46:11,Chrome,Includes 5-second visible pauses
+TC006,Dashboard Audit,PASSED,55.87,2026-02-11,12:55:28,Chrome,Comprehensive audit completed
+TC007,Complete Dashboard Audit,PASSED,128.00,2026-02-11,12:58:13,Chrome,Modal and sidebar verified
+TC008,Study Material Download,PASSED,71.30,2026-02-11,12:49:34,Chrome,No materials available (expected)
+TC009,Payment History,PASSED,80.37,2026-02-11,12:53:28,Chrome,Payment history accessed
+TC010,Change Password,PASSED,78.47,2026-02-11,13:01:17,Chrome,Password change successful
+TC011,Dashboard Optimized,PASSED,98.67,2026-02-11,14:40:20,Chrome,Enhanced with better logging
+TC012,Login Test Rerun,PASSED,369.88,2026-02-11,14:47:55,Chrome,5-minute browser keep-alive
+TC013,Logout Test Rerun,PASSED,89.43,2026-02-11,14:52:12,Chrome,Fast execution
+TC014,Dashboard Audit Rerun,PASSED,102.83,2026-02-11,14:55:44,Chrome,Comprehensive verification

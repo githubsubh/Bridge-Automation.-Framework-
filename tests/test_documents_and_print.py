@@ -95,9 +95,49 @@ class Test_010_DocumentsAndPrint:
             self.logger.error(f"Error during print tab verification: {e}")
         
         # Close the tab and go back
-        self.logger.info("Closing print tab and returning to main window...")
+        # Close the tab and go back
         self.driver.close()
         self.driver.switch_to.window(main_window)
+        self.logger.info("Closing print tab and returning to main window...")
+        time.sleep(2)
         
-        self.logger.info("**** Test_010_DocumentsAndPrint Completed Successfully ****")
+        # 4. Phase 3: Dashboard Menu Navigation
+        self.logger.info("--- Phase 3: Verifying Dashboard Menu Navigation ---")
+        
+        menu_items = [
+            ("Home", "//a[contains(text(),'Home')]"),
+            ("About Us", "//a[contains(text(),'About Us')]"),
+            ("Contact Us", "//a[contains(text(),'Contact Us')]"),
+            ("Profile", "//a[contains(@class,'nav-link') and contains(@href,'profile')]")
+        ]
+        
+        for name, xpath in menu_items:
+            try:
+                self.logger.info(f"Navigating to '{name}'...")
+                element = self.driver.find_element(By.XPATH, xpath)
+                
+                # Highlight element (optional visual helper)
+                self.driver.execute_script("arguments[0].style.border='3px solid red'", element)
+                time.sleep(1) # Visual pause
+                
+                element.click()
+                time.sleep(3) # Wait for page load
+                
+                current_url = self.driver.current_url
+                self.logger.info(f"Clicked '{name}' -> URL: {current_url}")
+                
+                if "error" in current_url.lower() or "not-found" in current_url.lower():
+                    self.logger.error(f"❌ Broken link found for '{name}'")
+                else:
+                    self.logger.info(f"✅ Navigation to '{name}' successful")
+                    
+                # Navigate back to dashboard if we left it (except for profile which is on dashboard)
+                if "dashboard" not in current_url and name != "Profile":
+                    self.driver.back()
+                    time.sleep(2)
+                    
+            except Exception as e:
+                self.logger.warning(f"Could not navigate to '{name}': {e}")
+        
+        self.logger.info("**** Test_010_DocumentsAndPrint & Navigation Completed Successfully ****")
         time.sleep(2)

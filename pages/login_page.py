@@ -16,6 +16,9 @@ class LoginPage(BasePage):
     # We will look for any reliable element related to the logged-in state.
     # A logout button is a classic indicator.
     link_logout_xpath = (By.XPATH, "//a[contains(text(), 'Logout')]")
+    
+    # Error Message Locator - Generic fallback
+    error_message_xpath = (By.XPATH, "//div[contains(@class, 'alert') or contains(@class, 'error') or contains(@class, 'help-block') or contains(text(), 'Incorrect')]")
 
     def __init__(self, driver):
         super().__init__(driver)
@@ -107,3 +110,17 @@ class LoginPage(BasePage):
         
         self.logger.info("All dashboard keywords found.")
         return True
+
+    def get_login_error_message(self):
+        """
+        Retrieves the text of any visible error message on the page.
+        """
+        try:
+            # Short wait for error message to appear
+            msg = WebDriverWait(self.driver, 5).until(EC.visibility_of_element_located(self.error_message_xpath))
+            text = msg.text
+            self.logger.info(f"Captured error message: {text}")
+            return text
+        except:
+            self.logger.info("No error message found.")
+            return ""

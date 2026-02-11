@@ -28,7 +28,7 @@ class Test_005_StudyMaterial:
         # 2. Login Phase
         login_page = LoginPage(self.driver)
         self.logger.info("Logging in to access Dashboard...")
-        if not login_page.login_with_manual_captcha(self.email, self.password, timeout=120):
+        if not login_page.login_with_manual_captcha(self.email, self.password, timeout=300):
             pytest.fail("Login failed, cannot test study material.")
             
         self.logger.info("Login Successful. Waiting 5 seconds on Dashboard...")

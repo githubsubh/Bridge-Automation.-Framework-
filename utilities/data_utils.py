@@ -26,7 +26,7 @@ class DataUtils:
             except ValueError:
                 count = 1
             
-        email = f"insphere.shubhamsingh+{count}@gmail.com"
+        email = f"subh7409+{count}@gmail.com"
         
         # Increment for next run
         with open(counter_path, "w") as f:

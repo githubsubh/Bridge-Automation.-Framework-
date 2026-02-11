@@ -40,11 +40,11 @@ class Test_012_DashboardAudit:
         # 3. Audit School Details Modal
         self.logger.info("--- Phase 2: School & RC Modal Audit ---")
         dashboard_page.mouse_hover(dashboard_page.btn_school_details)
-        time.sleep(2)
+        time.sleep(5)
         dashboard_page.click_school_details()
         
         # Give modal a second to appear
-        time.sleep(3)
+        time.sleep(5)
         
         if dashboard_page.verify_modal_content():
             self.logger.info("Modal Table Verification: PASSED")

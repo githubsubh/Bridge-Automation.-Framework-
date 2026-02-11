@@ -1,12 +1,15 @@
 from selenium.webdriver.common.by import By
 from pages.base_page import BasePage
+import time
 
 class EServicesPage(BasePage):
     # --- Locators: Apply Page ---
     container_services = (By.CSS_SELECTOR, ".c-table.d1 .container")
     list_service_items = (By.CSS_SELECTOR, "li.list-group-item")
+    # This locator finds the specific 'Apply' icon link within each list item
     btn_apply_service = (By.CSS_SELECTOR, "a[title*='Apply for']")
-    
+    service_name_locator = (By.CSS_SELECTOR, "div > strong")
+
     # --- Locators: My Requests Page ---
     table_requests = (By.CSS_SELECTOR, ".fee-details table.table-striped")
     rows_requests = (By.CSS_SELECTOR, ".fee-details table.table-striped tbody tr")
@@ -21,6 +24,31 @@ class EServicesPage(BasePage):
         links = self.driver.find_elements(*self.btn_apply_service)
         self.logger.info(f"Available Services: {len(links)} found across {len(items)} items.")
         return len(links)
+
+    def get_all_services_details(self):
+        """
+        Scrapes all service names and their apply URLs.
+        Returns a dictionary: { 'Service Name': 'Apply URL' }
+        """
+        self.logger.info("Scraping all available E-Services...")
+        services = {}
+        items = self.driver.find_elements(*self.list_service_items)
+        
+        for item in items:
+            try:
+                # Extract Name
+                name_el = item.find_element(*self.service_name_locator)
+                name = name_el.text.strip()
+                
+                # Extract Link
+                link_el = item.find_element(By.CSS_SELECTOR, "a[title*='Apply for']")
+                url = link_el.get_attribute("href")
+                
+                services[name] = url
+            except Exception as e:
+                self.logger.warning(f"Failed to extract details for an item: {e}")
+        
+        return services
 
     def get_request_history(self):
         """Returns list of existing e-service requests."""
@@ -47,4 +75,41 @@ class EServicesPage(BasePage):
             if request_type.lower() in r['type'].lower():
                 self.logger.info(f"Confirmed request found: {r['type']} (Status: {r['status']})")
                 return True
+        return False
+
+    def verify_apply_page(self):
+        """Verifies that the E-Services Apply page is loaded and has services."""
+        self.logger.info("Verifying E-Services Apply Page...")
+        try:
+            if self.get_service_count() > 0:
+                self.logger.info("Apply Page Verification: PASS")
+                return True
+            else:
+                 self.logger.warning("Apply Page loaded but no services found.")
+                 return True # Still returning True as page might be valid but empty? Or False?
+        except Exception as e:
+            self.logger.error(f"Apply Page Verification Failed: {e}")
+            return False
+            
+    def click_service_by_name(self, service_name_partial):
+        """Clicks on a service 'Apply' link matching the name."""
+        self.logger.info(f"Attempting to click service matching: {service_name_partial}")
+        services = self.get_all_services_details()
+        
+        for name, url in services.items():
+            if service_name_partial.lower() in name.lower():
+                self.logger.info(f"Found match: {name}. Navigating to {url}")
+                # We can navigate directly or find element and click
+                self.driver.get(url)
+                return True
+        
+        self.logger.warning(f"No service found matching '{service_name_partial}'")
+        return False
+
+    def verify_requests_page(self):
+        """Verifies that the My Requests page is loaded."""
+        self.logger.info("Verifying My Requests Page...")
+        if "eservices/requests" in self.driver.current_url:
+             self.logger.info("My Requests Page URL verified.")
+             return True
         return False

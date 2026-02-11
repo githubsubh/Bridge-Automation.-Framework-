@@ -1,5 +1,7 @@
 from selenium.webdriver.common.by import By
 from pages.base_page import BasePage
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 class DashboardPage(BasePage):
     # --- Locators ---
@@ -52,6 +54,11 @@ class DashboardPage(BasePage):
     badges_success = (By.CSS_SELECTOR, ".badge.bg-success")
     progress_bar = (By.CSS_SELECTOR, ".progress-bar")
     
+    # Teacher Info
+    text_teacher_name = (By.CSS_SELECTOR, ".cname")
+    text_reference_no = (By.XPATH, "//strong[contains(text(), 'Reference No.:')]/parent::p")
+    text_udise_code = (By.XPATH, "//th[contains(text(), 'UDISE Code')]/parent::tr/parent::thead/parent::table/tbody/tr[1]/td[1]")
+
     # Header & Logout
     dropdown_user = (By.ID, "dropdownMenuLink")
     link_change_password = (By.XPATH, "//a[@href='/teacher/change-password']")
@@ -59,6 +66,19 @@ class DashboardPage(BasePage):
 
     def __init__(self, driver):
         super().__init__(driver)
+
+    def get_teacher_name(self):
+        return self.get_element_text(self.text_teacher_name).strip()
+
+    def get_reference_no(self):
+        full_text = self.get_element_text(self.text_reference_no)
+        # Assuming format like "Reference No.: V1125000043"
+        if ":" in full_text:
+            return full_text.split(":")[1].strip()
+        return full_text.strip()
+
+    def get_modal_udise_code(self):
+        return self.get_element_text(self.text_udise_code).strip()
 
     def verify_study_material(self):
         """Verifies the Study Material section exists and has the Download link."""
@@ -194,12 +214,19 @@ class DashboardPage(BasePage):
         return len(success_badges) == 5 and "100%" in progress_text
 
     def do_logout(self):
-        """Performs logout."""
+        """Performs logout with deliberate pauses for visibility."""
         self.logger.info("Attempting Logout...")
         try:
             self.do_click(self.dropdown_user)
+            # Wait for logout link to be visible
+            WebDriverWait(self.driver, 10).until(EC.visibility_of_element_located(self.link_logout))
+            self.logger.info("Logout link appeared. Waiting 3 seconds...")
+            import time
+            time.sleep(3)
+            
             self.do_click(self.link_logout)
-            self.logger.info("Logout clicked.")
+            self.logger.info("Logout clicked. Waiting 2 seconds for redirection...")
+            time.sleep(2)
             return True
         except Exception as e:
             self.logger.error(f"Logout failed: {e}")

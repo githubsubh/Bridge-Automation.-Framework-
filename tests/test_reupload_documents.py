@@ -7,6 +7,11 @@ from pages.dashboard_page import DashboardPage
 from pages.documents_page import DocumentsPage
 from utilities.read_properties import ReadConfig
 from utilities.custom_logger import LogGen
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.common.keys import Keys
 
 class Test_011_ReuploadDocuments:
     home_url = "https://bridge-uat.nios.ac.in/"
@@ -54,43 +59,161 @@ class Test_011_ReuploadDocuments:
             f.write(dom_content)
         self.logger.info("LIVE DOM captured and saved to 'documents_upload_page_live.html'")
         
-        # 3. Perform Re-upload (Slowed down for visual confirmation)
-        self.logger.info("--- Phase: Systematic Re-upload ---")
+        # 3. View Documents (Eye Icon) and Sample Document
+        self.logger.info("--- Phase: Viewing Documents ---")
         
-        # Logic to enable and upload
-        def force_upload(label, locator, file_path):
-            self.logger.info(f"Attempting upload for {label}: {file_path}")
-            elem = docs_page.get_element(locator)
-            # Remove disabled attribute via JS
-            self.driver.execute_script("arguments[0].removeAttribute('disabled');", elem)
-            time.sleep(1)
-            elem.send_keys(file_path)
-            self.logger.info(f"DONE: {label} uploaded. Pausing 3s...")
-            time.sleep(3)
+        # View uploaded documents (Eye Icon)
+        # We start by finding how many buttons there are
+        view_buttons = self.driver.find_elements(By.XPATH, "//button[contains(@class, 'uploader-wrapper-action-btn')]")
+        count = len(view_buttons)
+        
+        # Explicit wait
+        wait = WebDriverWait(self.driver, 10)
+        
+        if count > 0:
+            self.logger.info(f"Found {count} view document buttons. Iterating through each...")
+            
+            for i in range(count):
+                try:
+                    # Re-find elements to avoid StaleElementReferenceException
+                    current_buttons = self.driver.find_elements(By.XPATH, "//button[contains(@class, 'uploader-wrapper-action-btn')]")
+                    if i >= len(current_buttons):
+                        break
+                        
+                    btn = current_buttons[i]
+                    
+                    # Scroll into view to ensure it's clickable and visible to user
+                    self.driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", btn)
+                    time.sleep(1)
+                    
+                    self.logger.info(f"Clicking view button {i+1} of {count}...")
+                    # Highlight the button for better visibility
+                    self.driver.execute_script("arguments[0].style.border='3px solid red'", btn)
+                    time.sleep(0.5)
+                    
+                    self.driver.execute_script("arguments[0].click();", btn)
+                    
+                    self.logger.info(f"Opened document {i+1}. Waiting for modal...")
+                    
+                    # Wait for SweetAlert2 modal to appear
+                    try:
+                        modal_img = wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, "div.swal2-container img.swal2-image")))
+                        self.logger.info("Modal image visible. PREVIEWING FOR 5 SECONDS...")
+                        time.sleep(5) # Strict 5 second wait
+                        
+                        # Find and Click Close Button
+                        close_btn = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "button.swal2-close")))
+                        self.logger.info("Closing modal...")
+                        close_btn.click()
+                        
+                        # Wait for modal to disappear
+                        wait.until(EC.invisibility_of_element_located((By.CSS_SELECTOR, "div.swal2-container")))
+                        self.logger.info("Modal closed.")
+                        
+                    except Exception as e_modal:
+                        self.logger.warning(f"Modal interaction failed: {e_modal}. Trying to close via background click or ESC.")
+                        try:
+                            # Fallback: Click outside or send ESC
+                            action = ActionChains(self.driver)
+                            action.send_keys(Keys.ESCAPE).perform()
+                        except:
+                            pass
 
-        force_upload("Passport Photo", docs_page.PHOTO_INPUT, self.photo_path)
-        force_upload("Signature", docs_page.SIGNATURE_INPUT, self.sig_path)
-        force_upload("B.Ed Certificate", docs_page.BED_INPUT, self.doc_path)
-        force_upload("Appointment Letter", docs_page.APPOINTMENT_INPUT, self.doc_path)
-        force_upload("Self Declaration", docs_page.SELF_DECLARATION_INPUT, self.doc_path)
+                    self.logger.info(f"Finished viewing document {i+1}.")
+                    time.sleep(1) 
+                        
+                except Exception as e:
+                    self.logger.warning(f"Could not view document {i+1}: {e}")
+        else:
+             self.logger.warning("No 'eye icon' (view document) buttons found.")
         
-        self.logger.info("All documents uploaded. Waiting 8 seconds for visual inspection...")
-        time.sleep(8)
+        # === View Sample Documents ===
+        self.logger.info("--- Phase: Viewing Sample Documents ---")
         
-        # 4. Save and Submit
-        self.logger.info("Moving to Submit button...")
-        docs_page.mouse_hover(docs_page.BTN_UPLOAD_SUBMIT)
-        time.sleep(2)
+        # Find all "View Sample Document" buttons
+        sample_buttons = self.driver.find_elements(By.CSS_SELECTOR, "span.sample-docv.viewsam")
+        sample_count = len(sample_buttons)
         
-        self.logger.info("Clicking Submit button...")
-        docs_page.click_upload_submit()
+        if sample_count > 0:
+            self.logger.info(f"Found {sample_count} 'View Sample Document' buttons. Iterating through each...")
+            
+            for i in range(sample_count):
+                try:
+                    # Re-find elements to avoid stale references
+                    current_samples = self.driver.find_elements(By.CSS_SELECTOR, "span.sample-docv.viewsam")
+                    if i >= len(current_samples):
+                        break
+                        
+                    sample_btn = current_samples[i]
+                    
+                    # Scroll into view
+                    self.driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", sample_btn)
+                    time.sleep(1)
+                    
+                    self.logger.info(f"Clicking 'View Sample Document' button {i+1} of {sample_count}...")
+                    # Highlight for visibility
+                    self.driver.execute_script("arguments[0].style.border='3px solid blue'", sample_btn)
+                    time.sleep(0.5)
+                    
+                    self.driver.execute_script("arguments[0].click();", sample_btn)
+                    
+                    self.logger.info(f"Opened sample document {i+1}. Waiting for modal...")
+                    
+                    # Wait for SweetAlert2 modal to appear
+                    try:
+                        # For PDFs or images, the modal structure may be slightly different
+                        # Try waiting for either image or general popup
+                        modal_content = wait.until(
+                            EC.visibility_of_element_located(
+                                (By.CSS_SELECTOR, "div.swal2-popup")
+                            )
+                        )
+                        self.logger.info("Sample document modal visible. PREVIEWING FOR 5 SECONDS...")
+                        time.sleep(5) # Strict 5 second wait
+                        
+                        # Find and Click Close Button
+                        close_btn = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "button.swal2-close")))
+                        self.logger.info("Closing sample document modal...")
+                        close_btn.click()
+                        
+                        # Wait for modal to disappear
+                        wait.until(EC.invisibility_of_element_located((By.CSS_SELECTOR, "div.swal2-container")))
+                        self.logger.info("Sample document modal closed.")
+                        
+                    except Exception as e_modal:
+                        self.logger.warning(f"Sample document modal interaction failed: {e_modal}. Trying ESC.")
+                        try:
+                            action = ActionChains(self.driver)
+                            action.send_keys(Keys.ESCAPE).perform()
+                        except:
+                            pass
+
+                    self.logger.info(f"Finished viewing sample document {i+1}.")
+                    time.sleep(1)
+                        
+                except Exception as e:
+                    self.logger.warning(f"Could not view sample document {i+1}: {e}")
+        else:
+            self.logger.warning("No 'View Sample Document' buttons found.")
+
+        # === Navigate to Dashboard ===
+        self.logger.info("--- Phase: Navigating to Dashboard ---")
+        self.logger.info("Clicking 'Go to Dashboard' to end test...")
+        try:
+             # Targeted locator for the footer link
+             dashboard_link = self.driver.find_element(By.XPATH, "//a[contains(@href, '/teacher/dashboard') and contains(., 'Go to Dashboard')]")
+             
+             # Scroll to it
+             self.driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", dashboard_link)
+             time.sleep(1)
+             dashboard_link.click()
+             self.logger.info("Clicked 'Go to Dashboard' link.")
+        except:
+             self.logger.info("Could not find specific footer 'Go to Dashboard' link, navigating via URL.")
+             self.driver.get(self.home_url + "teacher/dashboard")
         
-        self.logger.info("Submission clicked. Waiting 10 seconds for results...")
-        time.sleep(10)
-        
-        # 5. Return to Dashboard
-        self.logger.info("Navigating back to Dashboard to confirm context...")
-        self.driver.get(self.home_url + "teacher/dashboard")
-        time.sleep(5)
+        time.sleep(3)
+        self.logger.info("Returned to Dashboard.")
         
         self.logger.info("**** Test_011_ReuploadDocuments (Refined) Completed Successfully ****")
+

@@ -112,129 +112,142 @@ class PaymentFlowPage(BasePage):
             return False
 
     def click_pay_now(self):
-        """Final click to proceed to payment gateway."""
+        """Final click to proceed to payment gateway with robust JS fallback."""
         try:
+            # 1. Try primary "Pay Now" button
             btn = self.driver.find_element(*self.PAY_NOW_BTN)
-            self.driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", btn)
+            self.driver.execute_script("arguments[0].scrollIntoView({block: 'center', inline: 'center'});", btn)
+            time.sleep(1)
             self.driver.execute_script("arguments[0].click();", btn)
-            self.logger.info("Clicked Pay Now button")
+            self.logger.info("Clicked primary Pay Now button via JS")
         except:
-             # Try generic submit
-             self.do_click((By.XPATH, "//button[@type='submit' or contains(text(), 'Pay')]"))
+            # 2. Try generic "Pay" or "Submit" button
+            try:
+                self.logger.info("Pay Now button not found, trying generic Pay/Submit...")
+                fallback_xpath = "//button[@type='submit' or contains(text(), 'Pay') or contains(text(), 'Proceed') or contains(text(), 'CONTINUE')]"
+                btn = self.driver.find_element(By.XPATH, fallback_xpath)
+                self.driver.execute_script("arguments[0].scrollIntoView({block: 'center', inline: 'center'});", btn)
+                time.sleep(1)
+                self.driver.execute_script("arguments[0].click();", btn)
+                self.logger.info("Clicked generic Pay/CONTINUE button via JS")
+            except Exception as e:
+                self.logger.error(f"Failed to click any Payment button: {e}")
+                raise
         
-    def select_payment_mode(self, mode="Credit Card"):
-        """Select payment mode on SabPaisa gateway."""
+    def select_payment_mode(self, mode="Cards"):
+        """Select payment mode on gateway with optimized probing."""
         try:
-            # Common patterns for gateway mode buttons
             self.logger.info(f"Attempting to select payment mode: {mode}")
-            # time.sleep(2)  # Removed redundant wait
+            time.sleep(5)
             
-            # Try finding by text or specific common classes
-            locators = [
-                (By.XPATH, f"//*[contains(text(), '{mode}')]"),
-                (By.XPATH, "//li[contains(@class, 'payment-mode')]"),
-                (By.XPATH, "//button[contains(@class, 'card')]"),
-                (By.CSS_SELECTOR, ".card-payment-option")
-            ]
+            search_modes = [mode]
+            if mode.endswith('s'): search_modes.append(mode[:-1])
             
-            for by, val in locators:
-                try:
-                    el = self.driver.find_element(by, val)
-                    self.driver.execute_script("arguments[0].click();", el)
-                    self.logger.info(f"Selected mode via {val}")
-                    return True
-                except:
-                    continue
+            for m in search_modes:
+                locators = [
+                    (By.XPATH, f"//*[contains(text(), '{m}')]"),
+                    (By.XPATH, f"//button[contains(., '{m}')]"),
+                    (By.CSS_SELECTOR, f"[id*='{m.lower()}'], [class*='{m.lower()}']")
+                ]
+                
+                for by, val in locators:
+                    try:
+                        elements = self.driver.find_elements(by, val)
+                        for el in elements:
+                            if el.is_displayed():
+                                self.driver.execute_script("arguments[0].click();", el)
+                                self.logger.info(f"Selected mode via {val} (matched '{m}')")
+                                self.driver.implicitly_wait(10)
+                                return True
+                    except:
+                        continue
+            self.driver.implicitly_wait(10)
             return False
         except Exception as e:
+            self.driver.implicitly_wait(10)
             self.logger.warning(f"Could not select payment mode {mode}: {e}")
             return False
 
     def enter_card_details(self, number, name, expiry, cvv):
-        """Enter dummy card details on SabPaisa gateway with robust detection."""
+        """Enter dummy card details with fast iframe/field probing."""
         try:
             self.logger.info(f"Entering card details for: {name}")
-            # time.sleep(2) # Wait for form transition - replaced with explicit wait below
-
-            # Retry loop to find fields (handling potential loading delays)
+            time.sleep(5)
+            
+            self.driver.implicitly_wait(1) 
             found_fields = False
-            for attempt in range(5):
-                # 1. Search for potential iframes
+            for attempt in range(3):
                 iframes = self.driver.find_elements(By.TAG_NAME, "iframe")
-                self.logger.info(f"Attempt {attempt+1}: Found {len(iframes)} iframes.")
                 
-                card_field_selectors = [
-                     (By.ID, "cardNumber"), (By.NAME, "cardNumber"), (By.CSS_SELECTOR, "input[name*='card'][name*='number']"),
-                     (By.ID, "cardNum"), (By.CSS_SELECTOR, "input[placeholder*='Number']")
+                card_selectors = [
+                     (By.NAME, "cardNumber"), (By.ID, "cardNumber"), (By.CSS_SELECTOR, "input[id*='Card'][id*='Number']"),
+                     (By.CSS_SELECTOR, "input[name*='number']"), (By.XPATH, "//input[contains(@placeholder, 'Card Number')]"),
+                     (By.CSS_SELECTOR, "input[autocomplete='cc-number']")
                 ]
 
                 def find_fields():
-                    for by, sel in card_field_selectors:
-                        if self.driver.find_elements(by, sel):
-                            return True
+                    for by, sel in card_selectors:
+                        if self.driver.find_elements(by, sel): return True
                     return False
 
-                # Check main frame first
                 if find_fields():
-                    found_fields = True
-                    break
+                    found_fields = True; break
                 
-                # Check iframes
-                iframe_found = False
                 for i, frame in enumerate(iframes):
                     try:
                         self.driver.switch_to.frame(frame)
                         if find_fields():
-                            self.logger.info(f"Found card fields in iframe {i}")
-                            iframe_found = True
-                            found_fields = True
-                            break
+                            self.logger.info(f"Found fields in iframe {i}"); found_fields = True; break
                         self.driver.switch_to.default_content()
-                    except:
-                        self.driver.switch_to.default_content()
+                    except: self.driver.switch_to.default_content()
                 
-                if iframe_found:
-                    break
+                if not found_fields and attempt == 1:
+                     try:
+                         with open("gateway_debug.html", "w", encoding="utf-8") as f:
+                             f.write(self.driver.page_source)
+                         self.logger.info("Saved gateway debug DOM to gateway_debug.html")
+                     except: pass
                 
                 if not found_fields:
-                    self.logger.info("Card fields not found yet, waiting...")
-                    time.sleep(0.5)
+                    time.sleep(2)
             
             if not found_fields:
-                self.logger.error("Failed to find card details fields after retries.")
+                self.logger.error("Failed to find card details fields after retries. Check gateway_debug.html")
+                # Optionally raise an exception here if card fields are critical
+                # raise Exception("Card details fields not found on gateway page.")
 
-
-            # 2. Enter details using prioritized locators
+            # Match fields and set values
             field_maps = [
-                {"sel": ["#cardNumber", "[name='cardNumber']", "input[name*='number']"], "val": number},
-                {"sel": ["#cardHolderName", "[name='cardHolderName']", "input[name*='name']"], "val": name},
-                {"sel": ["#cardExpiry", "[name='cardExpiry']", "input[name*='expiry']", "input[placeholder*='MM/YY']"], "val": expiry},
-                {"sel": ["#cardCvv", "[name='cardCvv']", "input[name*='cvv']", "input[placeholder*='CVV']"], "val": cvv}
+                {"sel": ["#cardNumber", "[name='cardNumber']", "input[name*='number']", "input[id*='Number']", "input[autocomplete='cc-number']"], "val": number},
+                {"sel": ["#cardHolderName", "[name='cardHolderName']", "input[name*='Name']", "input[id*='Name']", "input[name*='holder']", "input[autocomplete='cc-name']"], "val": name},
+                {"sel": ["#cardExpiry", "[name='cardExpiry']", "#expiry", "input[name*='expiry']", "input[placeholder*='MM/YY']", "input[autocomplete='cc-exp']"], "val": expiry},
+                {"sel": ["#cardCvv", "[name='cardCvv']", "#cvv", "input[name*='cvv']", "input[placeholder*='CVV']", "input[autocomplete='cc-csc']"], "val": cvv}
             ]
 
             for field in field_maps:
                 for selector in field["sel"]:
                     try:
                         el = self.driver.find_element(By.CSS_SELECTOR, selector)
-                        el.clear()
-                        el.send_keys(field["val"])
-                        self.logger.info(f"Set field via {selector}")
-                        break # Found it, move to next field
-                    except:
-                        continue
+                        self.driver.execute_script("arguments[0].value = arguments[1];", el, field["val"])
+                        self.driver.execute_script("arguments[0].dispatchEvent(new Event('input', {bubbles:true}));", el)
+                        break
+                    except: continue
 
-            # 3. Click Pay/Submit
+            time.sleep(5)
+            btn_xpath = "//button[contains(text(), 'Pay') or contains(text(), 'Submit') or @id='payBtn' or @id='submitPayment' or contains(@class, 'btn-pay')]"
             try:
-                pay_btn = self.driver.find_element(By.XPATH, "//button[contains(text(), 'Pay') or contains(text(), 'Submit') or @id='payBtn' or @id='submitPayment']")
-                self.driver.execute_script("arguments[0].click();", pay_btn)
-                self.logger.info("Clicked Pay on gateway")
+                btn = self.driver.find_element(By.XPATH, btn_xpath)
+                self.driver.execute_script("arguments[0].click();", btn)
+                self.logger.info("Payment submitted via JS click")
             except:
-                # Last resort: try any primary button
-                self.driver.execute_script("document.querySelector('button.btn-primary, button[type=submit]').click();")
-
+                self.driver.execute_script("document.querySelector('button[type=submit], .btn-primary').click();")
+            
+            self.driver.implicitly_wait(10)
             self.driver.switch_to.default_content()
         except Exception as e:
+            self.driver.implicitly_wait(10)
             self.logger.error(f"Error in enter_card_details: {e}")
+            self.driver.switch_to.default_content()
 
     def simulate_success(self):
         """Handle the success/fail simulation page."""

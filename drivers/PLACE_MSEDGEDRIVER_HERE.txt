@@ -1,0 +1,14 @@
+INSTRUCTIONS
+============
+Place msedgedriver.exe for Edge 146.x in THIS FOLDER.
+
+Download URL:
+  https://msedgedriver.azureedge.net/146.0.3856.84/edgedriver_win64.zip
+
+Step 1: Download the ZIP on a machine with internet access (or via mobile hotspot)
+Step 2: Extract msedgedriver.exe from the ZIP
+Step 3: Place msedgedriver.exe in this folder (c:\AutomationProjects\Bridge-Automation.-Framework-\drivers\)
+Step 4: Run the validation tests:
+         python -m pytest tests/test_field_validations.py --browser=edge -v -s --html=reports/validation_report.html --self-contained-html
+
+Your installed Edge version: 146.0.3856.84

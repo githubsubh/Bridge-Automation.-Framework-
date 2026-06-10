@@ -1,0 +1,29 @@
+Page Name,Field Name,Input Format,Character Limit,Implementation Constraints / Logic
+Basic Details,Full Name of Teacher,Alphabetic and spaces,Maximum 100 characters,.to-uppercase HTML/JS class
+Basic Details,PAN Number,Strictly Alphanumeric (Regex: [A-Z]{5}[0-9]{4}[A-Z]{1}),Exactly 10 characters,.to-uppercase class
+Basic Details,Aadhaar Number,Strictly Numeric,Exactly 12 digits (14 with formatting hyphens),jquery.inputmask enforcement
+Basic Details,Date of Birth,Restricted Date Picker (dd-mm-yyyy),Masked exactly 10 characters,
+Basic Details,Gender,Dropdown Selection,"Fixed options (Male, Female, Transgender)",Chosen.js UI manipulation
+Personal Information,Social Category,Dropdown Selection,1 selection,Chosen.js required validation
+Personal Information,Medium of Study,Dropdown Selection,1 selection,Chosen.js required validation
+Address Details,Address Line 1 & Line 2,Alphanumeric and standard punctuation,Broad string,Auto-capitalizes via .to-uppercase
+Address Details,State,Dropdown,1 selection,Triggers AJAX to lock District
+Address Details,District,Dropdown,1 selection,Locked to specific State
+Address Details,Pincode,Strictly Numeric,Exactly 6 digits,.to-uppercase format conformity
+Eligibility Details,Date of Appointment,Restricted Date Picker (dd-mm-yyyy),Masked exactly 10 characters,
+Subject Details,Subject Mediums,Select Nodes,Up to 7 Subjects,disabled tags on read-only subjects
+Documents Upload,Photo & Signature,File (.jpg/.jpeg/.png),Max 2 MB,uploader-wrapper-box class
+Documents Upload,"B.Ed Certificate, Appointment Letter",File (.pdf),Max 2 MB,
+Documents Upload,Declaration Checks,Checkbox,Boolean,Locks submission button unless True
+Payment Gateway,Card Number,Numeric,16 digits,
+Payment Gateway,Card Holder Name,Alphabetic,Up to 50 characters,
+Payment Gateway,Expiry Date,Numeric,MM/YY Mask,
+Payment Gateway,CVV,Numeric,3 digits,
+Authentication,Email Address,Alphanumeric,Max ~100 digits,Regex boundaries
+Authentication,Mobile Number,Numeric,10 digits,
+OTP Verification,Mobile & Email OTP Responses,Numeric,Exactly 6 digits,Discrete numeric boxes
+Dashboard,Progress Tracking,Read-Only,N/A,Must be 100% to unlock E-Services
+E-Services,Name Correction Services,Alphabetic,Broad string,.to-uppercase conversion
+E-Services,Change Parameter Certifications,File,Max 2 MB,uploader-wrapper-box class
+Study Material,E-Receipts / Material,File Download,N/A,Hyperlink structure validation
+Password Reset,Passwords,Alphanumeric,Secure string,"Complexity enforced (1 Upper, 1 Number, 1 Special)"

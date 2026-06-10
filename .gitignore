@@ -1,0 +1,16 @@
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+logs/
+reports/
+.DS_Store
+.venv/
+venv/
+env/
+.env
+automation_profile/
+automation_profiles/
+test_profile/
+*.html
+*.png

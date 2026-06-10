@@ -1,0 +1,386 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.9.6, pytest-8.4.2, pluggy-1.6.0 -- /Library/Developer/CommandLineTools/usr/bin/python3
+cachedir: .pytest_cache
+metadata: {'Python': '3.9.6', 'Platform': 'macOS-12.7.6-x86_64-i386-64bit', 'Packages': {'pytest': '8.4.2', 'pluggy': '1.6.0'}, 'Plugins': {'metadata': '3.1.1', 'html': '4.2.0', 'Faker': '37.12.0'}}
+rootdir: /Users/anujjha/Bridge-Automation.-Framework-
+plugins: metadata-3.1.1, html-4.2.0, Faker-37.12.0
+collecting ... collected 1 item
+
+tests/test_registration.py::Test_001_Registration::test_registration FAILED [100%]
+
+=================================== FAILURES ===================================
+___________________ Test_001_Registration.test_registration ____________________
+tests/test_registration.py:190: in test_registration
+    payment_page.enter_card_details(card_num, name, expiry, cvv)
+pages/payment_flow_page.py:71: in enter_card_details
+    self.do_send_keys(self.CARD_NUMBER_INPUT, number)
+pages/base_page.py:191: in do_send_keys
+    element = WebDriverWait(self.driver, 20).until(EC.element_to_be_clickable(by_locator))
+../Library/Python/3.9/lib/python/site-packages/selenium/webdriver/support/wait.py:138: in until
+    raise TimeoutException(message, screen, stacktrace)
+E   selenium.common.exceptions.TimeoutException: Message: 
+E   Stacktrace:
+E   0   chromedriver                        0x0000000105e59328 chromedriver + 6722344
+E   1   chromedriver                        0x0000000105e50b8a chromedriver + 6687626
+E   2   chromedriver                        0x000000010585eec5 chromedriver + 454341
+E   3   chromedriver                        0x00000001058b39d8 chromedriver + 801240
+E   4   chromedriver                        0x00000001058b3d21 chromedriver + 802081
+E   5   chromedriver                        0x0000000105900224 chromedriver + 1114660
+E   6   chromedriver                        0x00000001058fd381 chromedriver + 1102721
+E   7   chromedriver                        0x00000001058a59e1 chromedriver + 743905
+E   8   chromedriver                        0x00000001058a67e1 chromedriver + 747489
+E   9   chromedriver                        0x0000000105e11be1 chromedriver + 6429665
+E   10  chromedriver                        0x0000000105e15f8e chromedriver + 6446990
+E   11  chromedriver                        0x0000000105df1369 chromedriver + 6296425
+E   12  chromedriver                        0x0000000105e169f8 chromedriver + 6449656
+E   13  chromedriver                        0x0000000105ddfa50 chromedriver + 6224464
+E   14  chromedriver                        0x0000000105e3cf88 chromedriver + 6606728
+E   15  chromedriver                        0x0000000105e3d142 chromedriver + 6607170
+E   16  chromedriver                        0x0000000105e50791 chromedriver + 6686609
+E   17  libsystem_pthread.dylib             0x00007ff8032a24e1 _pthread_start + 125
+E   18  libsystem_pthread.dylib             0x00007ff80329df6b thread_start + 15
+------------------------------ Captured log setup ------------------------------
+INFO     setup:conftest.py:32 Launching Chrome browser as default
+----------------------------- Captured stdout call -----------------------------
+
+==================================================
+ATTENTION: OTP SENT. Please enter it MANUALLY in the browser.
+The script will wait up to 5 minutes for you to complete this.
+==================================================
+------------------------------ Captured log call -------------------------------
+INFO     Test_001_Registration:test_registration.py:26 **** Starting Restored Test_001_Registration ****
+INFO     Test_001_Registration:test_registration.py:44 Step 1: Basic Details
+INFO     BasePage:registration_page.py:61 Checking for any modal popups...
+ERROR    BasePage:base_page.py:185 Exception occurred while clicking on element: ('css selector', 'button.swal2-confirm'). Exception: Message: 
+Stacktrace:
+0   chromedriver                        0x0000000105e59328 chromedriver + 6722344
+1   chromedriver                        0x0000000105e50b8a chromedriver + 6687626
+2   chromedriver                        0x000000010585eec5 chromedriver + 454341
+3   chromedriver                        0x00000001058b39d8 chromedriver + 801240
+4   chromedriver                        0x00000001058b3d21 chromedriver + 802081
+5   chromedriver                        0x0000000105900224 chromedriver + 1114660
+6   chromedriver                        0x00000001058fd381 chromedriver + 1102721
+7   chromedriver                        0x00000001058a59e1 chromedriver + 743905
+8   chromedriver                        0x00000001058a67e1 chromedriver + 747489
+9   chromedriver                        0x0000000105e11be1 chromedriver + 6429665
+10  chromedriver                        0x0000000105e15f8e chromedriver + 6446990
+11  chromedriver                        0x0000000105df1369 chromedriver + 6296425
+12  chromedriver                        0x0000000105e169f8 chromedriver + 6449656
+13  chromedriver                        0x0000000105ddfa50 chromedriver + 6224464
+14  chromedriver                        0x0000000105e3cf88 chromedriver + 6606728
+15  chromedriver                        0x0000000105e3d142 chromedriver + 6607170
+16  chromedriver                        0x0000000105e50791 chromedriver + 6686609
+17  libsystem_pthread.dylib             0x00007ff8032a24e1 _pthread_start + 125
+18  libsystem_pthread.dylib             0x00007ff80329df6b thread_start + 15
+
+INFO     BasePage:registration_page.py:68 No modal found to dismiss.
+INFO     BasePage:base_page.py:203 Sent keys 'Jason Martin' to element with locator: ('id', 'basicdetailform-name')
+INFO     BasePage:base_page.py:203 Sent keys 'Father Jason Martin' to element with locator: ('id', 'basicdetailform-father_name')
+INFO     BasePage:base_page.py:203 Sent keys 'Mother Jason Martin' to element with locator: ('id', 'basicdetailform-mother_name')
+INFO     BasePage:registration_page.py:35 Set DOB to '15-08-1990' using JavaScript
+INFO     BasePage:base_page.py:183 Clicked on element with locator: ('id', 'basicdetailform_gender_chosen')
+INFO     BasePage:base_page.py:183 Clicked on element with locator: ('xpath', "//div[@id='basicdetailform_gender_chosen']//ul[@class='chosen-results']/li[contains(text(), 'Male')]")
+INFO     BasePage:registration_page.py:46 Selected gender: Male
+INFO     BasePage:base_page.py:203 Sent keys '10101000101' to element with locator: ('id', 'basicdetailform-udise_code')
+INFO     BasePage:base_page.py:183 Clicked on element with locator: ('id', 'verify-udise')
+INFO     BasePage:registration_page.py:61 Checking for any modal popups...
+INFO     BasePage:base_page.py:183 Clicked on element with locator: ('css selector', 'button.swal2-confirm')
+INFO     BasePage:registration_page.py:63 Clicked OK/Confirm on modal
+INFO     BasePage:base_page.py:230 Element with locator ('css selector', 'div.swal2-container') is now invisible
+ERROR    BasePage:base_page.py:185 Exception occurred while clicking on element: ('id', 'submit-basic-details'). Exception: Message: element click intercepted: Element is not clickable at point (1156, 707)
+  (Session info: chrome=144.0.7559.132); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#elementclickinterceptedexception
+Stacktrace:
+0   chromedriver                        0x0000000105e59328 chromedriver + 6722344
+1   chromedriver                        0x0000000105e50b8a chromedriver + 6687626
+2   chromedriver                        0x000000010585eec5 chromedriver + 454341
+3   chromedriver                        0x00000001058bade9 chromedriver + 830953
+4   chromedriver                        0x00000001058b8a2b chromedriver + 821803
+5   chromedriver                        0x00000001058b5f59 chromedriver + 810841
+6   chromedriver                        0x00000001058b502c chromedriver + 806956
+7   chromedriver                        0x00000001058a7a81 chromedriver + 752257
+8   chromedriver                        0x00000001058a73d8 chromedriver + 750552
+9   chromedriver                        0x00000001058fd381 chromedriver + 1102721
+10  chromedriver                        0x00000001058a59e1 chromedriver + 743905
+11  chromedriver                        0x00000001058a67e1 chromedriver + 747489
+12  chromedriver                        0x0000000105e11be1 chromedriver + 6429665
+13  chromedriver                        0x0000000105e15f8e chromedriver + 6446990
+14  chromedriver                        0x0000000105df1369 chromedriver + 6296425
+15  chromedriver                        0x0000000105e169f8 chromedriver + 6449656
+16  chromedriver                        0x0000000105ddfa50 chromedriver + 6224464
+17  chromedriver                        0x0000000105e3cf88 chromedriver + 6606728
+18  chromedriver                        0x0000000105e3d142 chromedriver + 6607170
+19  chromedriver                        0x0000000105e50791 chromedriver + 6686609
+20  libsystem_pthread.dylib             0x00007ff8032a24e1 _pthread_start + 125
+21  libsystem_pthread.dylib             0x00007ff80329df6b thread_start + 15
+
+WARNING  BasePage:registration_page.py:78 Failed to click by ID (ElementClickInterceptedException), trying JS: Message: element click intercepted: Element is not clickable at point (1156, 707)
+  (Session info: chrome=144.0.7559.132); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#elementclickinterceptedexception
+Stacktrace:
+0   chromedriver                        0x0000000105e59328 chromedriver + 6722344
+1   chromedriver                        0x0000000105e50b8a chromedriver + 6687626
+2   chromedriver                        0x000000010585eec5 chromedriver + 454341
+3   chromedriver                        0x00000001058bade9 chromedriver + 830953
+4   chromedriver                        0x00000001058b8a2b chromedriver + 821803
+5   chromedriver                        0x00000001058b5f59 chromedriver + 810841
+6   chromedriver                        0x00000001058b502c chromedriver + 806956
+7   chromedriver                        0x00000001058a7a81 chromedriver + 752257
+8   chromedriver                        0x00000001058a73d8 chromedriver + 750552
+9   chromedriver                        0x00000001058fd381 chromedriver + 1102721
+10  chromedriver                        0x00000001058a59e1 chromedriver + 743905
+11  chromedriver                        0x00000001058a67e1 chromedriver + 747489
+12  chromedriver                        0x0000000105e11be1 chromedriver + 6429665
+13  chromedriver                        0x0000000105e15f8e chromedriver + 6446990
+14  chromedriver                        0x0000000105df1369 chromedriver + 6296425
+15  chromedriver                        0x0000000105e169f8 chromedriver + 6449656
+16  chromedriver                        0x0000000105ddfa50 chromedriver + 6224464
+17  chromedriver                        0x0000000105e3cf88 chromedriver + 6606728
+18  chromedriver                        0x0000000105e3d142 chromedriver + 6607170
+19  chromedriver                        0x0000000105e50791 chromedriver + 6686609
+20  libsystem_pthread.dylib             0x00007ff8032a24e1 _pthread_start + 125
+21  libsystem_pthread.dylib             0x00007ff80329df6b thread_start + 15
+
+INFO     BasePage:registration_page.py:82 Clicked Continue button by ID using JS
+INFO     Test_001_Registration:test_registration.py:59 Step 2: Eligibility
+INFO     BasePage:eligibility_page.py:21 Set Date of Appointment to '01-01-2022' using JavaScript
+ERROR    BasePage:base_page.py:185 Exception occurred while clicking on element: ('xpath', "//button[@type='submit' or contains(text(), 'Continue') or contains(text(), 'Submit')]"). Exception: Message: element click intercepted: Element is not clickable at point (1156, 718)
+  (Session info: chrome=144.0.7559.132); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#elementclickinterceptedexception
+Stacktrace:
+0   chromedriver                        0x0000000105e59328 chromedriver + 6722344
+1   chromedriver                        0x0000000105e50b8a chromedriver + 6687626
+2   chromedriver                        0x000000010585eec5 chromedriver + 454341
+3   chromedriver                        0x00000001058bade9 chromedriver + 830953
+4   chromedriver                        0x00000001058b8a2b chromedriver + 821803
+5   chromedriver                        0x00000001058b5f59 chromedriver + 810841
+6   chromedriver                        0x00000001058b502c chromedriver + 806956
+7   chromedriver                        0x00000001058a7a81 chromedriver + 752257
+8   chromedriver                        0x00000001058a73d8 chromedriver + 750552
+9   chromedriver                        0x00000001058fd381 chromedriver + 1102721
+10  chromedriver                        0x00000001058a59e1 chromedriver + 743905
+11  chromedriver                        0x00000001058a67e1 chromedriver + 747489
+12  chromedriver                        0x0000000105e11be1 chromedriver + 6429665
+13  chromedriver                        0x0000000105e15f8e chromedriver + 6446990
+14  chromedriver                        0x0000000105df1369 chromedriver + 6296425
+15  chromedriver                        0x0000000105e169f8 chromedriver + 6449656
+16  chromedriver                        0x0000000105ddfa50 chromedriver + 6224464
+17  chromedriver                        0x0000000105e3cf88 chromedriver + 6606728
+18  chromedriver                        0x0000000105e3d142 chromedriver + 6607170
+19  chromedriver                        0x0000000105e50791 chromedriver + 6686609
+20  libsystem_pthread.dylib             0x00007ff8032a24e1 _pthread_start + 125
+21  libsystem_pthread.dylib             0x00007ff80329df6b thread_start + 15
+
+WARNING  BasePage:eligibility_page.py:28 Standard click failed (ElementClickInterceptedException), trying JS: Message: element click intercepted: Element is not clickable at point (1156, 718)
+  (Session info: chrome=144.0.7559.132); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#elementclickinterceptedexception
+Stacktrace:
+0   chromedriver                        0x0000000105e59328 chromedriver + 6722344
+1   chromedriver                        0x0000000105e50b8a chromedriver + 6687626
+2   chromedriver                        0x000000010585eec5 chromedriver + 454341
+3   chromedriver                        0x00000001058bade9 chromedriver + 830953
+4   chromedriver                        0x00000001058b8a2b chromedriver + 821803
+5   chromedriver                        0x00000001058b5f59 chromedriver + 810841
+6   chromedriver                        0x00000001058b502c chromedriver + 806956
+7   chromedriver                        0x00000001058a7a81 chromedriver + 752257
+8   chromedriver                        0x00000001058a73d8 chromedriver + 750552
+9   chromedriver                        0x00000001058fd381 chromedriver + 1102721
+10  chromedriver                        0x00000001058a59e1 chromedriver + 743905
+11  chromedriver                        0x00000001058a67e1 chromedriver + 747489
+12  chromedriver                        0x0000000105e11be1 chromedriver + 6429665
+13  chromedriver                        0x0000000105e15f8e chromedriver + 6446990
+14  chromedriver                        0x0000000105df1369 chromedriver + 6296425
+15  chromedriver                        0x0000000105e169f8 chromedriver + 6449656
+16  chromedriver                        0x0000000105ddfa50 chromedriver + 6224464
+17  chromedriver                        0x0000000105e3cf88 chromedriver + 6606728
+18  chromedriver                        0x0000000105e3d142 chromedriver + 6607170
+19  chromedriver                        0x0000000105e50791 chromedriver + 6686609
+20  libsystem_pthread.dylib             0x00007ff8032a24e1 _pthread_start + 125
+21  libsystem_pthread.dylib             0x00007ff80329df6b thread_start + 15
+
+INFO     BasePage:eligibility_page.py:31 Clicked Continue on Eligibility Details page using JS
+INFO     Test_001_Registration:test_registration.py:68 Step 3: Authentication
+INFO     Test_001_Registration:test_registration.py:87 Using Email: insphere.shubhamsingh+136@gmail.com and Mobile: 6268326377
+INFO     BasePage:base_page.py:203 Sent keys 'insphere.shubhamsingh+136@gmail.com' to element with locator: ('id', 'authenticationform-email')
+INFO     BasePage:base_page.py:203 Sent keys '6268326377' to element with locator: ('id', 'authenticationform-mobile_no')
+INFO     BasePage:base_page.py:183 Clicked on element with locator: ('xpath', "//button[@type='submit' or contains(text(), 'Submit') or contains(text(), 'Send OTP') or contains(text(), 'Next') or contains(text(), 'Continue')]")
+INFO     BasePage:authentication_page.py:23 Clicked Submit/Continue on Authentication page
+INFO     Test_001_Registration:test_registration.py:94 Step 4: OTP Verification
+INFO     Test_001_Registration:test_registration.py:103 Step 5: Personal Information
+WARNING  BasePage:personal_information_page.py:62 JS click strategy failed for ('xpath', "//div[contains(@id, 'social_category_chosen')]"): Message: 
+Stacktrace:
+0   chromedriver                        0x0000000105e59328 chromedriver + 6722344
+1   chromedriver                        0x0000000105e50b8a chromedriver + 6687626
+2   chromedriver                        0x000000010585eec5 chromedriver + 454341
+3   chromedriver                        0x00000001058b39d8 chromedriver + 801240
+4   chromedriver                        0x00000001058b3d21 chromedriver + 802081
+5   chromedriver                        0x0000000105900224 chromedriver + 1114660
+6   chromedriver                        0x00000001058fd381 chromedriver + 1102721
+7   chromedriver                        0x00000001058a59e1 chromedriver + 743905
+8   chromedriver                        0x00000001058a67e1 chromedriver + 747489
+9   chromedriver                        0x0000000105e11be1 chromedriver + 6429665
+10  chromedriver                        0x0000000105e15f8e chromedriver + 6446990
+11  chromedriver                        0x0000000105df1369 chromedriver + 6296425
+12  chromedriver                        0x0000000105e169f8 chromedriver + 6449656
+13  chromedriver                        0x0000000105ddfa50 chromedriver + 6224464
+14  chromedriver                        0x0000000105e3cf88 chromedriver + 6606728
+15  chromedriver                        0x0000000105e3d142 chromedriver + 6607170
+16  chromedriver                        0x0000000105e50791 chromedriver + 6686609
+17  libsystem_pthread.dylib             0x00007ff8032a24e1 _pthread_start + 125
+18  libsystem_pthread.dylib             0x00007ff80329df6b thread_start + 15
+. Trying ActionChains.
+INFO     BasePage:personal_information_page.py:72 Selected 'General' from personalinformationform_social_category_chosen using ActionChains
+WARNING  BasePage:personal_information_page.py:62 JS click strategy failed for ('xpath', "//div[contains(@id, 'medium_of_study_chosen') or contains(@id, 'medium_chosen')]"): Message: 
+Stacktrace:
+0   chromedriver                        0x0000000105e59328 chromedriver + 6722344
+1   chromedriver                        0x0000000105e50b8a chromedriver + 6687626
+2   chromedriver                        0x000000010585eec5 chromedriver + 454341
+3   chromedriver                        0x00000001058b39d8 chromedriver + 801240
+4   chromedriver                        0x00000001058b3d21 chromedriver + 802081
+5   chromedriver                        0x0000000105900224 chromedriver + 1114660
+6   chromedriver                        0x00000001058fd381 chromedriver + 1102721
+7   chromedriver                        0x00000001058a59e1 chromedriver + 743905
+8   chromedriver                        0x00000001058a67e1 chromedriver + 747489
+9   chromedriver                        0x0000000105e11be1 chromedriver + 6429665
+10  chromedriver                        0x0000000105e15f8e chromedriver + 6446990
+11  chromedriver                        0x0000000105df1369 chromedriver + 6296425
+12  chromedriver                        0x0000000105e169f8 chromedriver + 6449656
+13  chromedriver                        0x0000000105ddfa50 chromedriver + 6224464
+14  chromedriver                        0x0000000105e3cf88 chromedriver + 6606728
+15  chromedriver                        0x0000000105e3d142 chromedriver + 6607170
+16  chromedriver                        0x0000000105e50791 chromedriver + 6686609
+17  libsystem_pthread.dylib             0x00007ff8032a24e1 _pthread_start + 125
+18  libsystem_pthread.dylib             0x00007ff80329df6b thread_start + 15
+. Trying ActionChains.
+INFO     BasePage:personal_information_page.py:72 Selected 'English' from personalinformationform_study_medium_chosen using ActionChains
+INFO     BasePage:base_page.py:183 Clicked on element with locator: ('xpath', "//button[@type='submit' or contains(text(), 'Save') or contains(text(), 'Next') or contains(text(), 'Continue')]")
+INFO     Test_001_Registration:test_registration.py:111 Step 6: Address Details
+INFO     BasePage:base_page.py:203 Sent keys '101 dd nagar' to element with locator: ('id', 'addressdetailsform-permanent_address1')
+INFO     BasePage:base_page.py:203 Sent keys 'netaji subhash place' to element with locator: ('id', 'addressdetailsform-permanent_address2')
+INFO     BasePage:base_page.py:110 Clicking trigger for state_dropdown_2_chosen
+INFO     BasePage:base_page.py:121 Found 37 items in dropdown state_dropdown_2_chosen
+INFO     BasePage:base_page.py:127 Clicking on option: 'DELHI'
+INFO     BasePage:base_page.py:130 Selected 'DELHI' from state_dropdown_2_chosen
+INFO     BasePage:base_page.py:110 Clicking trigger for district_dropdown_2_chosen
+INFO     BasePage:base_page.py:121 Found 17 items in dropdown district_dropdown_2_chosen
+INFO     BasePage:base_page.py:127 Clicking on option: 'CENTRAL'
+INFO     BasePage:base_page.py:130 Selected 'CENTRAL' from district_dropdown_2_chosen
+INFO     BasePage:base_page.py:203 Sent keys '110034' to element with locator: ('id', 'addressdetailsform-permanent_pincode')
+INFO     BasePage:base_page.py:183 Clicked on element with locator: ('xpath', "//button[@type='submit' or contains(text(), 'Save') or contains(text(), 'Next') or contains(text(), 'Continue')]")
+INFO     Test_001_Registration:test_registration.py:123 Step 7: Subject Details
+INFO     BasePage:subject_details_page.py:25 Auto-detecting enabled subject medium dropdowns...
+INFO     BasePage:subject_details_page.py:38 Subject 1 (one) medium is disabled/read-only.
+INFO     BasePage:subject_details_page.py:38 Subject 2 (two) medium is disabled/read-only.
+INFO     BasePage:subject_details_page.py:43 Attempting to select 'Any' for Subject 3 (three)...
+INFO     BasePage:base_page.py:22 Found regular select element, using Select class
+INFO     BasePage:base_page.py:26 Select element is hidden, unhiding it...
+INFO     BasePage:base_page.py:48 Selected index 1 (Any) from select dropdown
+INFO     BasePage:subject_details_page.py:46 Successfully processed Subject 3
+INFO     BasePage:subject_details_page.py:43 Attempting to select 'Any' for Subject 4 (four)...
+INFO     BasePage:base_page.py:22 Found regular select element, using Select class
+INFO     BasePage:base_page.py:26 Select element is hidden, unhiding it...
+INFO     BasePage:base_page.py:48 Selected index 1 (Any) from select dropdown
+INFO     BasePage:subject_details_page.py:46 Successfully processed Subject 4
+INFO     BasePage:subject_details_page.py:38 Subject 5 (five) medium is disabled/read-only.
+INFO     BasePage:subject_details_page.py:38 Subject 6 (six) medium is disabled/read-only.
+INFO     BasePage:subject_details_page.py:38 Subject 7 (seven) medium is disabled/read-only.
+INFO     BasePage:subject_details_page.py:84 Clicked Continue using JS (Force)
+INFO     Test_001_Registration:test_registration.py:130 Step 8: Document Upload
+INFO     BasePage:documents_page.py:86 --- DEBUGGING DOCUMENTS PAGE LOCATORS ---
+INFO     BasePage:documents_page.py:95 Relevant Document Element: ID='DocumentUploadForm', Tag='form', Type='None'
+INFO     BasePage:documents_page.py:95 Relevant Document Element: ID='documentuploadform-photo', Tag='input', Type='file'
+INFO     BasePage:documents_page.py:95 Relevant Document Element: ID='documentuploadform-signature', Tag='input', Type='file'
+INFO     BasePage:documents_page.py:95 Relevant Document Element: ID='documentuploadform-bed_certificate', Tag='input', Type='file'
+INFO     BasePage:documents_page.py:95 Relevant Document Element: ID='documentuploadform-appointment_letter', Tag='input', Type='file'
+INFO     BasePage:documents_page.py:95 Relevant Document Element: ID='documentuploadform-self_declaration', Tag='input', Type='file'
+INFO     BasePage:documents_page.py:95 Relevant Document Element: ID='submitbtnv', Tag='button', Type='submit'
+INFO     BasePage:documents_page.py:98 --- END DEBUGGING ---
+INFO     BasePage:documents_page.py:24 Found 5 file inputs.
+INFO     BasePage:documents_page.py:46 Uploading to input (ID='documentuploadform-photo'): /Users/anujjha/Bridge-Automation.-Framework-/test_data/dummy.jpg
+INFO     BasePage:documents_page.py:46 Uploading to input (ID='documentuploadform-signature'): /Users/anujjha/Bridge-Automation.-Framework-/test_data/dummy.jpg
+INFO     BasePage:documents_page.py:46 Uploading to input (ID='documentuploadform-bed_certificate'): /Users/anujjha/Bridge-Automation.-Framework-/test_data/dummy.pdf
+INFO     BasePage:documents_page.py:46 Uploading to input (ID='documentuploadform-appointment_letter'): /Users/anujjha/Bridge-Automation.-Framework-/test_data/dummy.pdf
+INFO     BasePage:documents_page.py:46 Uploading to input (ID='documentuploadform-self_declaration'): /Users/anujjha/Bridge-Automation.-Framework-/test_data/dummy.pdf
+INFO     BasePage:documents_page.py:56 Found 1 checkboxes.
+INFO     BasePage:documents_page.py:62 Toggled a checkbox
+INFO     BasePage:documents_page.py:70 Clicking Save & Continue using ID 'submitbtnv'
+INFO     BasePage:base_page.py:183 Clicked on element with locator: ('id', 'submitbtnv')
+INFO     Test_001_Registration:test_registration.py:169 Step 9: Review and Payment
+INFO     Test_001_Registration:test_registration.py:174 Successfully reached Review/Payment Page!
+INFO     BasePage:payment_flow_page.py:21 Found 2 checkboxes on Review page.
+INFO     BasePage:payment_flow_page.py:27 Toggled a confirmation checkbox
+INFO     BasePage:payment_flow_page.py:27 Toggled a confirmation checkbox
+ERROR    BasePage:payment_flow_page.py:40 Failed to select SabPaisa gateway: Message: no such element: Unable to locate element: {"method":"xpath","selector":"//*[contains(text(), 'SabPaisa') or contains(@alt, 'SabPaisa') or contains(@title, 'SabPaisa')]"}
+  (Session info: chrome=144.0.7559.132); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#nosuchelementexception
+Stacktrace:
+0   chromedriver                        0x0000000105e59328 chromedriver + 6722344
+1   chromedriver                        0x0000000105e50b8a chromedriver + 6687626
+2   chromedriver                        0x000000010585eec5 chromedriver + 454341
+3   chromedriver                        0x00000001058b39d8 chromedriver + 801240
+4   chromedriver                        0x00000001058b3d21 chromedriver + 802081
+5   chromedriver                        0x0000000105900224 chromedriver + 1114660
+6   chromedriver                        0x00000001058fd381 chromedriver + 1102721
+7   chromedriver                        0x00000001058a59e1 chromedriver + 743905
+8   chromedriver                        0x00000001058a67e1 chromedriver + 747489
+9   chromedriver                        0x0000000105e11be1 chromedriver + 6429665
+10  chromedriver                        0x0000000105e15f8e chromedriver + 6446990
+11  chromedriver                        0x0000000105df1369 chromedriver + 6296425
+12  chromedriver                        0x0000000105e169f8 chromedriver + 6449656
+13  chromedriver                        0x0000000105ddfa50 chromedriver + 6224464
+14  chromedriver                        0x0000000105e3cf88 chromedriver + 6606728
+15  chromedriver                        0x0000000105e3d142 chromedriver + 6607170
+16  chromedriver                        0x0000000105e50791 chromedriver + 6686609
+17  libsystem_pthread.dylib             0x00007ff8032a24e1 _pthread_start + 125
+18  libsystem_pthread.dylib             0x00007ff80329df6b thread_start + 15
+
+INFO     BasePage:base_page.py:183 Clicked on element with locator: ('xpath', "//button[@type='submit' or contains(text(), 'Pay')]")
+INFO     Test_001_Registration:test_registration.py:183 Payment Gateway Interaction
+ERROR    BasePage:base_page.py:185 Exception occurred while clicking on element: ('xpath', "//div[contains(text(), 'Card')]"). Exception: Message: 
+Stacktrace:
+0   chromedriver                        0x0000000105e59328 chromedriver + 6722344
+1   chromedriver                        0x0000000105e50b8a chromedriver + 6687626
+2   chromedriver                        0x000000010585eec5 chromedriver + 454341
+3   chromedriver                        0x00000001058b39d8 chromedriver + 801240
+4   chromedriver                        0x00000001058b3d21 chromedriver + 802081
+5   chromedriver                        0x0000000105900224 chromedriver + 1114660
+6   chromedriver                        0x00000001058fd381 chromedriver + 1102721
+7   chromedriver                        0x00000001058a59e1 chromedriver + 743905
+8   chromedriver                        0x00000001058a67e1 chromedriver + 747489
+9   chromedriver                        0x0000000105e11be1 chromedriver + 6429665
+10  chromedriver                        0x0000000105e15f8e chromedriver + 6446990
+11  chromedriver                        0x0000000105df1369 chromedriver + 6296425
+12  chromedriver                        0x0000000105e169f8 chromedriver + 6449656
+13  chromedriver                        0x0000000105ddfa50 chromedriver + 6224464
+14  chromedriver                        0x0000000105e3cf88 chromedriver + 6606728
+15  chromedriver                        0x0000000105e3d142 chromedriver + 6607170
+16  chromedriver                        0x0000000105e50791 chromedriver + 6686609
+17  libsystem_pthread.dylib             0x00007ff8032a24e1 _pthread_start + 125
+18  libsystem_pthread.dylib             0x00007ff80329df6b thread_start + 15
+
+WARNING  BasePage:payment_flow_page.py:62 Could not select payment mode Card
+ERROR    BasePage:base_page.py:205 Exception occurred while sending keys to element: ('id', 'cardNumber'). Type: TimeoutException. Exception: Message: 
+Stacktrace:
+0   chromedriver                        0x0000000105e59328 chromedriver + 6722344
+1   chromedriver                        0x0000000105e50b8a chromedriver + 6687626
+2   chromedriver                        0x000000010585eec5 chromedriver + 454341
+3   chromedriver                        0x00000001058b39d8 chromedriver + 801240
+4   chromedriver                        0x00000001058b3d21 chromedriver + 802081
+5   chromedriver                        0x0000000105900224 chromedriver + 1114660
+6   chromedriver                        0x00000001058fd381 chromedriver + 1102721
+7   chromedriver                        0x00000001058a59e1 chromedriver + 743905
+8   chromedriver                        0x00000001058a67e1 chromedriver + 747489
+9   chromedriver                        0x0000000105e11be1 chromedriver + 6429665
+10  chromedriver                        0x0000000105e15f8e chromedriver + 6446990
+11  chromedriver                        0x0000000105df1369 chromedriver + 6296425
+12  chromedriver                        0x0000000105e169f8 chromedriver + 6449656
+13  chromedriver                        0x0000000105ddfa50 chromedriver + 6224464
+14  chromedriver                        0x0000000105e3cf88 chromedriver + 6606728
+15  chromedriver                        0x0000000105e3d142 chromedriver + 6607170
+16  chromedriver                        0x0000000105e50791 chromedriver + 6686609
+17  libsystem_pthread.dylib             0x00007ff8032a24e1 _pthread_start + 125
+18  libsystem_pthread.dylib             0x00007ff80329df6b thread_start + 15
+=============================== warnings summary ===============================
+../Library/Python/3.9/lib/python/site-packages/urllib3/__init__.py:35
+  /Users/anujjha/Library/Python/3.9/lib/python/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+    warnings.warn(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_registration.py::Test_001_Registration::test_registration
+=================== 1 failed, 1 warning in 221.76s (0:03:41) ===================
